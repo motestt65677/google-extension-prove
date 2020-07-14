@@ -60,15 +60,44 @@ function onAccessApproved(desktop_id) {
     }, gotStream, getUserMediaError);
 
     function gotStream(stream) {
+        var video = document.querySelector('video');
         local_stream = stream;
-        document.querySelector('video').srcObject = local_stream;
+        video.srcObject = local_stream;
+
+        video.onloadedmetadata = function() {
+
+            var canvas = document.createElement('canvas');
+            canvas.width = 640;
+            canvas.height = 480;
+            var ctx = canvas.getContext('2d');
+            //draw image to canvas. scale to target dimensions
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            //convert to desired file format
+            var dataURI = canvas.toDataURL('image/jpeg'); // can also use 'image/png'
+            document.querySelector('img').src = dataURI;
+        };
+//   video.addEventListener('loadedmetadata',function(){
+//       var canvas = document.createElement('canvas');
+//       canvas.width = this.videoWidth;
+//       canvas.height = this.videoHeight;
+//       var ctx = canvas.getContext("2d");
+//       ctx.drawImage(this, 0, 0);
+//       var url = canvas.toDataURL();
+//       console.log(url);
+//       // will open the captured image in a new tab
+//       window.open(url);
+//     },false);
+//   video.srcObject = local_stream;
+//   video.play();
+        
+
         stream.onended = function() {
             if (desktop_sharing) {
                 toggle();
             }
         };
     }
-
     function getUserMediaError(e) {
       console.log('getUserMediaError: ' + JSON.stringify(e, null, '---'));
     }
