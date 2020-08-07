@@ -21,20 +21,46 @@ Author: Dongseong Hwang (dongseong.hwang@intel.com)
  */
 var desktop_sharing = false;
 var local_stream = null;
+var status = "home"; //home, screen shot, edit image, edit issue
+var editingImages = [];
 function toggle() {
     if (!desktop_sharing) {
-        chrome.desktopCapture.chooseDesktopMedia(["screen", "window"], onAccessApproved);
-    } else {
-        desktop_sharing = false;
+        chrome.desktopCapture.chooseDesktopMedia(["window"], onAccessApproved);
+    } 
 
-        if (local_stream)
-            local_stream.stop();
-        local_stream = null;
+    // else {
+    //     desktop_sharing = false;
 
-        document.querySelector('button').innerHTML = "Enable Capture";
-        console.log('Desktop sharing stopped...');
-    }
+    //     if (local_stream)
+    //         local_stream.getVideoTracks()[0].stop();
+    //     // local_stream = null;
+
+    //     document.querySelector('button').innerHTML = "Enable Capture";
+    //     console.log('Desktop sharing stopped...');
+    //     status = "edit image";
+    // }
 }
+function showEditIssue(){
+    document.getElementById('issueImageContainer').style.display = 'none';
+    document.getElementById('editIssueContainer').style.display = 'block';
+}
+
+function getPreviewImage(url){
+    var img = document.createElement('img');
+    img.width = 300;
+    img.setAttribute("object-fit", "cover");
+    img.src = url;
+    return img
+}
+function getOriginImage(url){
+    var img = document.createElement('img');
+    img.width = 1280;
+    img.setAttribute("object-fit", "cover");
+    img.src = url;
+    return img
+}
+
+
 
 function onAccessApproved(desktop_id) {
     if (!desktop_id) {
@@ -42,8 +68,8 @@ function onAccessApproved(desktop_id) {
         return;
     }
     desktop_sharing = true;
-    document.querySelector('button').innerHTML = "Disable Capture";
-    console.log("Desktop sharing started.. desktop_id:" + desktop_id);
+    // document.querySelector('button').innerHTML = "Disable Capture";
+    // console.log("Desktop sharing started.. desktop_id:" + desktop_id);
 
     navigator.webkitGetUserMedia({
         audio: false,
@@ -67,30 +93,29 @@ function onAccessApproved(desktop_id) {
         video.onloadedmetadata = function() {
 
             var canvas = document.createElement('canvas');
-            canvas.width = 640;
-            canvas.height = 480;
+            canvas.width = 1280;
+            canvas.height = 720;
             var ctx = canvas.getContext('2d');
             //draw image to canvas. scale to target dimensions
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
             //convert to desired file format
             var dataURI = canvas.toDataURL('image/jpeg'); // can also use 'image/png'
-            document.querySelector('img').src = dataURI;
+                     
+            // var img = getOriginImage(dataURI);
+            document.getElementById('issueImageContainer').style.display = 'block';
+            document.getElementById('editIssueContainer').style.display = 'none';
+            var img = document.querySelector('#editingImage');
+            img.width = 1280;
+            img.setAttribute("object-fit", "cover");
+            img.src = dataURI;
+
+            if (local_stream){
+                local_stream.getVideoTracks()[0].stop();
+                desktop_sharing = false;
+            }
+
         };
-//   video.addEventListener('loadedmetadata',function(){
-//       var canvas = document.createElement('canvas');
-//       canvas.width = this.videoWidth;
-//       canvas.height = this.videoHeight;
-//       var ctx = canvas.getContext("2d");
-//       ctx.drawImage(this, 0, 0);
-//       var url = canvas.toDataURL();
-//       console.log(url);
-//       // will open the captured image in a new tab
-//       window.open(url);
-//     },false);
-//   video.srcObject = local_stream;
-//   video.play();
-        
 
         stream.onended = function() {
             if (desktop_sharing) {
@@ -106,6 +131,56 @@ function onAccessApproved(desktop_id) {
 /**
  * Click handler to init the desktop capture grab
  */
-document.querySelector('button').addEventListener('click', function(e) {
+document.querySelector('#new').addEventListener('click', function(e) {
+    //toggle();
+    showEditIssue();
+});
+
+document.querySelector('#next').addEventListener('click', function(e) {
+    showEditIssue();
+});
+
+document.querySelector('#addImage').addEventListener('click', function(e) {
     toggle();
 });
+
+document.querySelector('#doneEditImage').addEventListener('click', function(e) {
+    html2canvas(document.querySelector("#convasCrop"), {scale:3}).then(canvas => {
+        var imageExist = document.getElementById('editedImage');
+        if(imageExist != undefined)
+            return;
+        
+        // canvas.id = "editedImage";
+        // canvas.width  = 800;
+        // canvas.height = 600;
+        var url = canvas.toDataURL("image/png");
+        var img = getPreviewImage(url);
+        document.querySelector('#imageList').appendChild(img);
+        editingImages.push(url);
+       
+        // document.querySelector('#convasContainer').appendChild(canvas)
+    });
+    
+    showEditIssue();
+
+});
+
+document.querySelector('#saveIssue').addEventListener('click', function(e) {
+     //chrome storage
+    // by passing an object you can define default values e.g.: []
+    chrome.storage.local.get({issues: []}, function (result) {
+        // the input argument is ALWAYS an object containing the queried keys
+        // so we select the key we need
+        var issues = result.issues;
+        var obj = {
+            images: editingImages, 
+            title: "abc"
+        };
+        issues.push(obj);
+        // set the new array value to the same key
+        chrome.storage.local.set({issues: issues});
+    });
+});
+
+
+
