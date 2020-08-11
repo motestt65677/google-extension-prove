@@ -24,6 +24,15 @@ var local_stream = null;
 var status = "home"; //home, screen shot, edit image, edit issue
 var editingImages = [];
 
+// changing menu tabs
+$('.ui.secondary.menu').on('click', '.item', function() {
+    if(!$(this).hasClass('dropdown')) {
+    $(this)
+        .addClass('active')
+        .siblings('.item')
+        .removeClass('active');
+    }
+});
 
 function toggle() {
     if (!desktop_sharing) {
@@ -160,9 +169,12 @@ document.querySelector('#doneEditImage').addEventListener('click', function(e) {
         // canvas.id = "editedImage";
         // canvas.width  = 800;
         // canvas.height = 600;
+        var item = document.createElement('div');
+        item.classList.add("item");
         var url = canvas.toDataURL("image/png");
         var img = getPreviewImage(url);
-        document.querySelector('#imageList').appendChild(img);
+        item.appendChild(img);
+        document.querySelector('#imageList').appendChild(item);
         editingImages.push(url);
        
         // document.querySelector('#convasContainer').appendChild(canvas)

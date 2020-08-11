@@ -55,16 +55,15 @@
   }
 
 </style>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
+<link rel="stylesheet" href="/css/semantic.min.css" >
+
 </head>
 <body>
   <div id="lowerLevel" style="z-index: 0; position: absolute; top: 0; left: 0; background-color: black;">
     <video autoplay style="position: absolute; width: 100%; height:100%;" ></video>
   </div>
   <div id="upperLevel" >
-    <div id="issueListContainer" >
-      
-    </div>
     <div id="issueImageContainer" style="display:none;">
       <div id="convasCrop">
         <img id="editingImage">
@@ -73,29 +72,50 @@
       <button id="doneEditImage">Done editing image</button>
     </div>
 
-    <div id="editIssueContainer" style="display:none;">
+    <div id="editIssueContainer">
       
       <!-- <div id="convasContainer" style="text-align: center; width: 500px; height: 500px;">
       </div> -->
-      <div class="container" style="margin-top: 30px;">
-        <div id="imageList" style="display: inline-block;">
+      
+      
+      <div class="container ui" style="margin-top: 30px;">
+        <h3 class="ui header">New Issue</h3>
+        <div class="ui section divider"></div>
+        <!-- <div id="imageList" style="display: inline-block;">
+        </div> -->
+        <div class="field">
+          <label>Screen Shots</label>
+          <div style="min-height: 50px; border: 1px dashed black; margin: 10px; vertical-align: middle; ">
+            <div id="imageList" class="ui horizontal list">
+              <div class="item">
+                
+              </div>
+            </div>
+            <button id="addImage"  style="display:inline-block; width: 30px; height: 30px; margin: auto; ">+</button>
+  
+          </div>
         </div>
-        <button id="addImage" style="display:inline-block; width: 150px; height: 150px;">Add Screen Shot</button>
-        <div class="mt-3">
-          <div class="form-group">
+
+        <form class="ui form">
+          
+          <div class="field">
             <label>Title</label>
             <input type="text" class="form-control" id="title">
           </div>
-          <div class="form-group">
+          <div class="field">
             <label>Environment</label>
             <input type="text" class="form-control" id="environment">
           </div>
-          <div class="form-group">
+          <div class="field">
             <label>Steps to reproduce</label>
             <input type="text" class="form-control" id="steps">
           </div>
-          <button id="saveIssue">Save</button>
-        </div>      
+          <div class="ui secondary grey segment">
+            <button id="saveIssue" class="ui button" type="submit">Submit issue</button>
+            <a id="saveIssue" class="ui right floated button" type="submit" href="/view/issueList.html">Cancel</a>
+
+          </div>
+        </form>
         
         
 
@@ -130,11 +150,13 @@
 
     <button id="list">Issue List</button>
   </div>
-<script src="html2canvas.min.js"></script>
-<script src="jquery-3.5.1.slim.min.js"></script>
-<script src="popper.min.js"></script>
-<script src="bootstrap.min.js"></script>
-<script src="app.js"></script>
+<script src="/javascript/html2canvas.min.js"></script>
+<script src="/javascript/jquery-3.5.1.slim.min.js"></script>
+<!-- <script src="popper.min.js"></script> -->
+<!-- <script src="bootstrap.min.js"></script> -->
+<script src="/javascript/semantic.min.js"></script>
+
+<script src="/view_javascript/newIssue.js"></script>
 
 </body>
 </html>
