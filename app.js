@@ -23,6 +23,8 @@ var desktop_sharing = false;
 var local_stream = null;
 var status = "home"; //home, screen shot, edit image, edit issue
 var editingImages = [];
+
+
 function toggle() {
     if (!desktop_sharing) {
         chrome.desktopCapture.chooseDesktopMedia(["window"], onAccessApproved);
@@ -134,6 +136,11 @@ function onAccessApproved(desktop_id) {
 document.querySelector('#new').addEventListener('click', function(e) {
     //toggle();
     showEditIssue();
+    editingImages = [];
+    document.querySelector('#imageList').innerHTML = "";
+    document.getElementById('title').value = "";
+    document.getElementById('environment').value = "";
+    document.getElementById('steps').value = "";
 });
 
 document.querySelector('#next').addEventListener('click', function(e) {
@@ -172,13 +179,19 @@ document.querySelector('#saveIssue').addEventListener('click', function(e) {
         // the input argument is ALWAYS an object containing the queried keys
         // so we select the key we need
         var issues = result.issues;
+        var title = document.getElementById('title').value;
+        var environment = document.getElementById('environment').value;
+        var steps = document.getElementById('steps').value;
+
         var obj = {
             images: editingImages, 
-            title: "abc"
+            title: title,
+            environment: environment,
+            steps: steps
         };
         issues.push(obj);
         // set the new array value to the same key
-        chrome.storage.local.set({issues: issues});
+        chrome.storage.local.set({issues: issues}); 
     });
 });
 
