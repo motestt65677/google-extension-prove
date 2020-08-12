@@ -55,13 +55,7 @@ function getPreviewImage(url){
     img.src = url;
     return img
 }
-function getOriginImage(url){
-    var img = document.createElement('img');
-    img.width = 1280;
-    img.setAttribute("object-fit", "cover");
-    img.src = url;
-    return img
-}
+
 
 
 
@@ -135,7 +129,15 @@ var ID = function () {
     // Math.random should be unique because of its seeding algorithm.
     // Convert it to base 36 (numbers + letters), and grab the first 9 characters
     // after the decimal.
-    return '_' + Math.random().toString(36).substr(2, 9);
+    var date = new Date();
+
+    // var year = date.getFullYear();
+    // var month = date.getMonth() + 1;
+    // var day = date.getDate();
+    // var hours = date.getHours();
+    // var minutes = date.getMinutes();
+    // var seconds = date.getSeconds();
+    return '_' + date.getTime();
 };
 
 /**
@@ -160,7 +162,7 @@ document.querySelector('#addImage').addEventListener('click', function(e) {
 });
 
 document.querySelector('#doneEditImage').addEventListener('click', function(e) {
-    html2canvas(document.querySelector("#convasCrop"), {scale:5}).then(canvas => {
+    html2canvas(document.querySelector("#convasCrop"), {scale:1}).then(canvas => {
         var imageExist = document.getElementById('editedImage');
         if(imageExist != undefined)
             return;
@@ -184,26 +186,32 @@ document.querySelector('#doneEditImage').addEventListener('click', function(e) {
 });
 
 document.querySelector('#saveIssue').addEventListener('click', function(e) {
+    // chrome.storage.local.clear(function() {
+    //     var error = chrome.runtime.lastError;
+    //     if (error) {
+    //         console.error(error);
+    //     }
+    // });
      //chrome storage
     // by passing an object you can define default values e.g.: []
     chrome.storage.local.get({issues: []}, function (result) {
         // the input argument is ALWAYS an object containing the queried keys
         // so we select the key we need
-        var issues = result.issues;
+        // var issues = result.issues;
         var title = document.getElementById('title').value;
         var environment = document.getElementById('environment').value;
         var steps = document.getElementById('steps').value;
-
+        var id = ID();
         var obj = {
-            id: ID(),
+            id: id,
             images: editingImages, 
             title: title,
             environment: environment,
             steps: steps
         };
-        issues.push(obj);
+        // issues.push(obj);
         // set the new array value to the same key
-        chrome.storage.local.set({issues: issues}, function(){
+        chrome.storage.local.set({[id]: obj}, function(){
             window.location.href = "/view/issueList.html";
         }); 
     });

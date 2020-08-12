@@ -1,23 +1,29 @@
 window.addEventListener("load", function(){
-    chrome.storage.local.get({issues: []}, function (result) {
-        // the input argument is ALWAYS an object containing the queried keys
-        // so we select the key we need
-        var issues = result.issues;
-        for(var i = 0; i < issues.length; i++){
-            var thisIssue = issues[i];
-            var item = document.createElement('div');
-            item.id = thisIssue.id;
-            item.onclick=toInfoPage;
-            var content = document.createElement('div');
-            var header = document.createElement('div');
-            item.classList.add('item');
-            content.classList.add('content');
-            header.classList.add('header');
+    var urlParams = new URLSearchParams(window.location.search);
+    var id = urlParams.get('id');
+    // console.log(id)
+    chrome.storage.local.get([id], function (item) {
+        var thisItem= item[id];
 
-            header.innerHTML = thisIssue.title;
-            content.appendChild(header);
-            item.appendChild(content)
-            document.getElementById("issues").appendChild(item);
+        document.getElementById('title').innerHTML = thisItem.title;
+        document.getElementById('environment').innerHTML = thisItem.environment;
+        document.getElementById('steps').innerHTML = thisItem.steps;
+
+        var images = thisItem.images;
+        var imageList = document.getElementById('imageList');
+        for(var i = 0; i < images.length; i++){
+            var thisImage = getOriginImage(images[i]);
+            imageList.appendChild(thisImage);
         }
+
     });
 });
+
+
+function getOriginImage(url){
+    var img = document.createElement('img');
+    img.width = 1000;
+    img.setAttribute("object-fit", "cover");
+    img.src = url;
+    return img
+}

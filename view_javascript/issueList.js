@@ -8,12 +8,14 @@ $('.ui.secondary.menu').on('click', '.item', function() {
     }
 });
 window.addEventListener("load", function(){
-    chrome.storage.local.get({issues: []}, function (result) {
+    chrome.storage.local.get(null, function (items) {
         // the input argument is ALWAYS an object containing the queried keys
         // so we select the key we need
-        var issues = result.issues;
-        for(var i = 0; i < issues.length; i++){
-            var thisIssue = issues[i];
+        var allKeys = Object.keys(items);
+
+        for(var i = 0; i< allKeys.length; i++){
+            var thisIssue = items[allKeys[i]];
+            console.log(items);
             var item = document.createElement('div');
             item.id = thisIssue.id;
             item.onclick=toInfoPage;
@@ -27,6 +29,7 @@ window.addEventListener("load", function(){
             content.appendChild(header);
             item.appendChild(content)
             document.getElementById("issues").appendChild(item);
+
         }
     });
 });
