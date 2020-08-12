@@ -65,8 +65,8 @@
   </div>
   <div id="upperLevel" >
     <div id="issueImageContainer" style="display:none;">
-      <div id="convasCrop">
-        <img id="editingImage">
+      <div id="convasCrop" style="display:inline-block;">
+        <img id="editingImage" >
         <p style="color:white; position: absolute; font-size: 30px; top: 50px; left: 50px;">aaaa</p>
       </div>
       <button id="doneEditImage">Done editing image</button>
@@ -85,18 +85,15 @@
         </div> -->
         <div class="field">
           <label>Screen Shots</label>
-          <div style="min-height: 50px; border: 1px dashed black; margin: 10px; vertical-align: middle; ">
-            <div id="imageList" class="ui horizontal list">
-              <div class="item">
-                
-              </div>
+          <div>
+            <div id="imageList" class="ui horizontal list" style="min-height: 100px; min-width: 150px; border: 1px dashed black; margin: 10px; vertical-align: middle; padding: 8px 12px 8px 12px;">
             </div>
             <button id="addImage"  style="display:inline-block; width: 30px; height: 30px; margin: auto; ">+</button>
   
           </div>
         </div>
 
-        <form class="ui form">
+        <div class="ui form">
           
           <div class="field">
             <label>Title</label>
@@ -112,10 +109,10 @@
           </div>
           <div class="ui secondary grey segment">
             <button id="saveIssue" class="ui button" type="submit">Submit issue</button>
-            <a id="saveIssue" class="ui right floated button" type="submit" href="/view/issueList.html">Cancel</a>
+            <a class="ui right floated button" type="submit" href="/view/issueList.html">Cancel</a>
 
           </div>
-        </form>
+        </div>
         
         
 
@@ -156,7 +153,7 @@
 <!-- <script src="bootstrap.min.js"></script> -->
 <script src="/javascript/semantic.min.js"></script>
 
-<script src="/view_javascript/newIssue.js"></script>
+<script src="/view_javascript/issueNew.js"></script>
 
 </body>
 </html>

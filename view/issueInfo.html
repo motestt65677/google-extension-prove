@@ -1,0 +1,88 @@
+<html>
+<head>
+<style>
+  
+
+</style>
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
+<link rel="stylesheet" href="/css/semantic.min.css" >
+
+</head>
+<body>
+  
+  <div id="upperLevel" >
+    <div id="issueImageContainer" style="display:none;">
+      <div id="convasCrop" style="display:inline-block;">
+        <img id="editingImage" >
+        <p style="color:white; position: absolute; font-size: 30px; top: 50px; left: 50px;">aaaa</p>
+      </div>
+      <button id="doneEditImage">Done editing image</button>
+    </div>
+
+    <div id="editIssueContainer">
+      
+      <!-- <div id="convasContainer" style="text-align: center; width: 500px; height: 500px;">
+      </div> -->
+      
+      
+      <div class="container ui" style="margin-top: 30px;">
+        <h3 id="title" class="ui header">Title</h3>
+        <div class="ui section divider"></div>
+        <!-- <div id="imageList" style="display: inline-block;">
+        </div> -->
+
+
+        <div class="ui form">
+            <div class="field">
+                <label>Screen Shots: </label>
+                <div>
+                    <div id="imageList" class="ui horizontal list" style="min-height: 100px; min-width: 150px; border: 1px dashed black; margin: 10px; vertical-align: middle; padding: 8px 12px 8px 12px;">
+                    </div>
+                </div>
+            </div>
+            <div class="inline field">
+            <label>Environment: </label>
+            <span id="environment"></span>
+            </div>
+            <div class="inline field">
+            <label>Steps to reproduce: </label>
+            <span id="steps"></span>
+            </div>          
+
+        </div>
+        
+        
+
+        <!-- <div>
+          <span>Expected result</span>
+          <input type="text">
+        </div>
+        <div>
+          <span>Actual result</span>
+          <input type="text">
+        </div>
+        <div>
+          <span>Priority</span>
+          <input type="text">
+        </div>
+        <div>
+          <span>Url</span>
+          <input type="text">
+        </div>
+        <div>
+          <span>Description</span>
+          <input type="text">
+        </div> -->
+      </div>
+    </div>
+  </div>
+<script src="/javascript/html2canvas.min.js"></script>
+<script src="/javascript/jquery-3.5.1.slim.min.js"></script>
+<!-- <script src="popper.min.js"></script> -->
+<!-- <script src="bootstrap.min.js"></script> -->
+<script src="/javascript/semantic.min.js"></script>
+
+<script src="/view_javascript/issueInfo.js"></script>
+
+</body>
+</html>

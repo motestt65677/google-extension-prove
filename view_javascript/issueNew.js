@@ -24,15 +24,7 @@ var local_stream = null;
 var status = "home"; //home, screen shot, edit image, edit issue
 var editingImages = [];
 
-// changing menu tabs
-$('.ui.secondary.menu').on('click', '.item', function() {
-    if(!$(this).hasClass('dropdown')) {
-    $(this)
-        .addClass('active')
-        .siblings('.item')
-        .removeClass('active');
-    }
-});
+
 
 function toggle() {
     if (!desktop_sharing) {
@@ -139,6 +131,13 @@ function onAccessApproved(desktop_id) {
     }
 }
 
+var ID = function () {
+    // Math.random should be unique because of its seeding algorithm.
+    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+    // after the decimal.
+    return '_' + Math.random().toString(36).substr(2, 9);
+};
+
 /**
  * Click handler to init the desktop capture grab
  */
@@ -161,7 +160,7 @@ document.querySelector('#addImage').addEventListener('click', function(e) {
 });
 
 document.querySelector('#doneEditImage').addEventListener('click', function(e) {
-    html2canvas(document.querySelector("#convasCrop"), {scale:3}).then(canvas => {
+    html2canvas(document.querySelector("#convasCrop"), {scale:5}).then(canvas => {
         var imageExist = document.getElementById('editedImage');
         if(imageExist != undefined)
             return;
@@ -196,6 +195,7 @@ document.querySelector('#saveIssue').addEventListener('click', function(e) {
         var steps = document.getElementById('steps').value;
 
         var obj = {
+            id: ID(),
             images: editingImages, 
             title: title,
             environment: environment,
@@ -203,9 +203,11 @@ document.querySelector('#saveIssue').addEventListener('click', function(e) {
         };
         issues.push(obj);
         // set the new array value to the same key
-        chrome.storage.local.set({issues: issues}); 
+        chrome.storage.local.set({issues: issues}, function(){
+            window.location.href = "/view/issueList.html";
+        }); 
     });
-});
 
+});
 
 
