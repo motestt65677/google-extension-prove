@@ -25,5 +25,6 @@ function getOriginImage(url){
     img.width = 1000;
     img.setAttribute("object-fit", "cover");
     img.src = url;
+    img.classList.add('screen-shot');
     return img
 }
