@@ -183,15 +183,27 @@ document.querySelector('#saveIssue').addEventListener('click', function(e) {
         // so we select the key we need
         // var issues = result.issues;
         var title = document.getElementById('title').value;
-        var environment = document.getElementById('environment').value;
+
+        var priority = $("input[name='priority']:checked").val();
+        var browser = $("input[name='browser']:checked").val();
+        var url = document.getElementById('url').value;
+        var expected_result = document.getElementById('expected_result').value;
+        var actual_result = document.getElementById('actual_result').value;
         var steps = document.getElementById('steps').value;
+        var description = document.getElementById('description').value;
+
         var id = ID();
         var obj = {
             id: id,
             images: editingImages, 
             title: title,
-            environment: environment,
-            steps: steps
+            priority: priority,
+            browser: browser,
+            url: url,
+            expected_result: expected_result,
+            actual_result: actual_result,
+            steps: steps,
+            description: description
         };
         // issues.push(obj);
         // set the new array value to the same key

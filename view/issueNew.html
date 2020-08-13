@@ -83,15 +83,7 @@
         <div class="ui section divider"></div>
         <!-- <div id="imageList" style="display: inline-block;">
         </div> -->
-        <div class="field">
-          <label>Screen Shots</label>
-          <div>
-            <div id="imageList" class="ui horizontal list" style="min-height: 100px; min-width: 150px; border: 1px dashed black; margin: 10px; vertical-align: middle; padding: 8px 12px 8px 12px;">
-            </div>
-            <button id="addImage"  style="display:inline-block; width: 30px; height: 30px; margin: auto; ">+</button>
-  
-          </div>
-        </div>
+        
 
         <div class="ui form">
           
@@ -99,13 +91,86 @@
             <label>Title</label>
             <input type="text" class="form-control" id="title">
           </div>
+          
+          <div class="inline fields">
+            <label for="fruit">Priority</label>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="priority" checked="" tabindex="0" class="hidden" value="low">
+                <label>Low</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="priority" tabindex="0" class="hidden" value="medium">
+                <label>Medium</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="priority" tabindex="0" class="hidden" value="high">
+                <label>High</label>
+              </div>
+            </div>
+          </div>
+          <div class="inline fields">
+            <label for="fruit">Browser</label>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" checked="" tabindex="0" class="hidden" value="chrome">
+                <label>Chrome</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" tabindex="0" class="hidden" value="firefox">
+                <label>Firefox</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" tabindex="0" class="hidden" value="safari">
+                <label>Safari</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" tabindex="0" class="hidden" value="edge">
+                <label>Edge</label>
+              </div>
+            </div>
+          </div>
           <div class="field">
-            <label>Environment</label>
-            <input type="text" class="form-control" id="environment">
+            <label>Url</label>
+            <input type="text" class="form-control" id="url">
+          </div>
+          <div class="field">
+            <label>Expected result</label>
+            <input type="text" class="form-control" id="expected_result">
+          </div>
+          <div class="field">
+            <label>Actual result</label>
+            <input type="text" class="form-control" id="actual_result">
           </div>
           <div class="field">
             <label>Steps to reproduce</label>
-            <input type="text" class="form-control" id="steps">
+            <textarea type="text" class="form-control" id="steps"></textarea>
+          </div>
+          
+          
+          <div class="field">
+            <label>Description</label>
+            <textarea type="text" class="form-control" id="description"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Screen Shots</label>
+            <div>
+              <div id="imageList" class="ui horizontal list" style="min-height: 100px; min-width: 150px; border: 1px dashed black; margin: 10px; vertical-align: middle; padding: 8px 12px 8px 12px;">
+              </div>
+              <button id="addImage"  style="display:inline-block; width: 30px; height: 30px; margin: auto; ">+</button>
+    
+            </div>
           </div>
           <div class="ui secondary grey segment">
             <button id="saveIssue" class="ui button" type="submit">Submit issue</button>
@@ -139,14 +204,14 @@
       </div>
     </div>
   </div>
-  <div style="position: absolute; bottom:0; left:50%; z-index: 2;">
+  <!-- <div style="position: absolute; bottom:0; left:50%; z-index: 2;">
     <button id="new">New Issue</button>
     <button id="next">Next</button>
     <button id="done">Done</button>
     
 
     <button id="list">Issue List</button>
-  </div>
+  </div> -->
 <script src="/javascript/html2canvas.min.js"></script>
 <script src="/javascript/jquery-3.5.1.slim.min.js"></script>
 <!-- <script src="popper.min.js"></script> -->
