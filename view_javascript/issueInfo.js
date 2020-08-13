@@ -1,4 +1,6 @@
 var closeIssueBtn = document.getElementById('closeIssue');
+var reopenIssueBtn = document.getElementById('reopenIssue');
+
 var urlParams = new URLSearchParams(window.location.search);
 var id = urlParams.get('id');
 window.addEventListener("load", function(){
@@ -22,6 +24,14 @@ window.addEventListener("load", function(){
             var thisImage = getOriginImage(images[i]);
             imageList.appendChild(thisImage);
         }
+        // console.log(thisItem.status);
+        if(thisItem.status == "closed"){
+            $("#reopenIssue").show();
+            $("#closeIssue").hide();
+        } else{
+            $("#closeIssue").show();
+            $("#reopenIssue").hide();
+        }
 
     });
 });
@@ -31,10 +41,26 @@ closeIssueBtn.addEventListener('click', function(){
         var thisItem = item[id];
         thisItem.status = "closed";
         chrome.storage.local.set({[id]: thisItem}, function(){
-            window.location.href = "/view/issueList.html";
+            //window.location.href = "/view/issueList.html";
+            
+            $("#reopenIssue").show();
+            $("#closeIssue").hide();
         }); 
     });
 
+});
+
+reopenIssueBtn.addEventListener('click', function(){
+    chrome.storage.local.get([id], function (item) {
+        var thisItem = item[id];
+        thisItem.status = "open";
+        chrome.storage.local.set({[id]: thisItem}, function(){
+            //window.location.href = "/view/issueList.html";
+            $("#closeIssue").show();
+            $("#reopenIssue").hide();
+            
+        }); 
+    });
 });
 
 function closeIssue(id){
