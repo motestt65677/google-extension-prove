@@ -176,41 +176,44 @@ document.querySelector('#doneEditImage').addEventListener('click', function(e) {
 });
 
 document.querySelector('#saveIssue').addEventListener('click', function(e) {
-     //chrome storage
-    // by passing an object you can define default values e.g.: []
-    chrome.storage.local.get({issues: []}, function (result) {
-        // the input argument is ALWAYS an object containing the queried keys
-        // so we select the key we need
-        // var issues = result.issues;
-        var title = document.getElementById('title').value;
+     //chrome storage clear all
 
-        var priority = $("input[name='priority']:checked").val();
-        var browser = $("input[name='browser']:checked").val();
-        var url = document.getElementById('url').value;
-        var expected_result = document.getElementById('expected_result').value;
-        var actual_result = document.getElementById('actual_result').value;
-        var steps = document.getElementById('steps').value;
-        var description = document.getElementById('description').value;
+    // chrome.storage.local.clear(function() {
+    //     var error = chrome.runtime.lastError;
+    //     if (error) {
+    //         console.error(error);
+    //     }
+    // });
 
-        var id = ID();
-        var obj = {
-            id: id,
-            images: editingImages, 
-            title: title,
-            priority: priority,
-            browser: browser,
-            url: url,
-            expected_result: expected_result,
-            actual_result: actual_result,
-            steps: steps,
-            description: description
-        };
-        // issues.push(obj);
-        // set the new array value to the same key
-        chrome.storage.local.set({[id]: obj}, function(){
-            window.location.href = "/view/issueList.html";
-        }); 
-    });
+    var title = document.getElementById('title').value;
+
+    var priority = $("input[name='priority']:checked").val();
+    var browser = $("input[name='browser']:checked").val();
+    var url = document.getElementById('url').value;
+    var expected_result = document.getElementById('expected_result').value;
+    var actual_result = document.getElementById('actual_result').value;
+    var steps = document.getElementById('steps').value;
+    var description = document.getElementById('description').value;
+
+    var id = ID();
+    var obj = {
+        id: id,
+        images: editingImages, 
+        title: title,
+        priority: priority,
+        browser: browser,
+        url: url,
+        expected_result: expected_result,
+        actual_result: actual_result,
+        steps: steps,
+        description: description,
+        status: 'open'
+    };
+    // issues.push(obj);
+    // set the new array value to the same key
+    chrome.storage.local.set({[id]: obj}, function(){
+        window.location.href = "/view/issueList.html";
+    }); 
 
 });
 

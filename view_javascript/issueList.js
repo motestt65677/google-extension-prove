@@ -8,6 +8,20 @@ $('.ui.secondary.menu').on('click', '.item', function() {
     }
 });
 window.addEventListener("load", function(){
+    loadIssues('open');
+});
+
+$('[data-tab]').click(function(){
+    loadIssues($(this).data('tab'))
+});
+    
+function toInfoPage(){
+    window.location.href = "/view/issueInfo.html?id=" + this.id;
+}
+
+function loadIssues(status){
+    // status types: open, closed, all
+    document.getElementById('issues').innerHTML = "";
     chrome.storage.local.get(null, function (items) {
         // the input argument is ALWAYS an object containing the queried keys
         // so we select the key we need
@@ -15,7 +29,11 @@ window.addEventListener("load", function(){
 
         for(var i = 0; i< allKeys.length; i++){
             var thisIssue = items[allKeys[i]];
-            console.log(items);
+            var thisStatus = thisIssue.status;
+            if(status != "all"){
+                if(status != thisStatus)
+                    continue;
+            }
             var item = document.createElement('div');
             item.id = thisIssue.id;
             item.onclick=toInfoPage;
@@ -24,16 +42,10 @@ window.addEventListener("load", function(){
             item.classList.add('item');
             content.classList.add('content');
             header.classList.add('header');
-
             header.innerHTML = thisIssue.title;
             content.appendChild(header);
             item.appendChild(content)
             document.getElementById("issues").appendChild(item);
-
         }
     });
-});
-    
-function toInfoPage(){
-    window.location.href = "/view/issueInfo.html?id=" + this.id;
 }
