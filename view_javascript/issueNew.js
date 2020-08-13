@@ -24,7 +24,9 @@ var local_stream = null;
 var status = "home"; //home, screen shot, edit image, edit issue
 var editingImages = [];
 
-
+$('.ui.radio.checkbox')
+  .checkbox()
+;
 
 function toggle() {
     if (!desktop_sharing) {
@@ -65,8 +67,6 @@ function onAccessApproved(desktop_id) {
         return;
     }
     desktop_sharing = true;
-    // document.querySelector('button').innerHTML = "Disable Capture";
-    // console.log("Desktop sharing started.. desktop_id:" + desktop_id);
 
     navigator.webkitGetUserMedia({
         audio: false,
@@ -98,19 +98,14 @@ function onAccessApproved(desktop_id) {
 
             //convert to desired file format
             var dataURI = canvas.toDataURL('image/jpeg'); // can also use 'image/png'
-                     
-            // var img = getOriginImage(dataURI);
-            document.getElementById('issueImageContainer').style.display = 'block';
-            document.getElementById('editIssueContainer').style.display = 'none';
-            var img = document.querySelector('#editingImage');
-            img.width = 1280;
-            img.setAttribute("object-fit", "cover");
-            img.src = dataURI;
 
             if (local_stream){
                 local_stream.getVideoTracks()[0].stop();
                 desktop_sharing = false;
             }
+
+            var childWindow = popupCenter({url: "/view/issueEditImage.html", title: "aaa", w: 1300, h: 800,});    
+            childWindow.dataURI = dataURI;  
 
         };
 
@@ -126,36 +121,35 @@ function onAccessApproved(desktop_id) {
 }
 
 var ID = function () {
-    // Math.random should be unique because of its seeding algorithm.
-    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
-    // after the decimal.
     var date = new Date();
-
-    // var year = date.getFullYear();
-    // var month = date.getMonth() + 1;
-    // var day = date.getDate();
-    // var hours = date.getHours();
-    // var minutes = date.getMinutes();
-    // var seconds = date.getSeconds();
     return '_' + date.getTime();
 };
 
-/**
- * Click handler to init the desktop capture grab
- */
-document.querySelector('#new').addEventListener('click', function(e) {
-    //toggle();
-    showEditIssue();
-    editingImages = [];
-    document.querySelector('#imageList').innerHTML = "";
-    document.getElementById('title').value = "";
-    document.getElementById('environment').value = "";
-    document.getElementById('steps').value = "";
-});
+var popupCenter = ({url, title, w, h}) => {
+    // Fixes dual-screen position                             Most browsers      Firefox
+    const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+    const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
 
-document.querySelector('#next').addEventListener('click', function(e) {
-    showEditIssue();
-});
+    const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+    const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+    const systemZoom = width / window.screen.availWidth;
+    const left = (width - w) / 2 / systemZoom + dualScreenLeft
+    const top = (height - h) / 2 / systemZoom + dualScreenTop
+    const newWindow = window.open(url, title, 
+      `
+      scrollbars=yes,
+      width=${w / systemZoom}, 
+      height=${h / systemZoom}, 
+      top=${top}, 
+      left=${left}
+      `
+    )
+
+    if (window.focus) newWindow.focus();
+
+    return newWindow;
+}
 
 document.querySelector('#addImage').addEventListener('click', function(e) {
     toggle();
@@ -167,9 +161,6 @@ document.querySelector('#doneEditImage').addEventListener('click', function(e) {
         if(imageExist != undefined)
             return;
         
-        // canvas.id = "editedImage";
-        // canvas.width  = 800;
-        // canvas.height = 600;
         var item = document.createElement('div');
         item.classList.add("item");
         var url = canvas.toDataURL("image/png");
@@ -181,17 +172,10 @@ document.querySelector('#doneEditImage').addEventListener('click', function(e) {
         // document.querySelector('#convasContainer').appendChild(canvas)
     });
     
-    showEditIssue();
 
 });
 
 document.querySelector('#saveIssue').addEventListener('click', function(e) {
-    // chrome.storage.local.clear(function() {
-    //     var error = chrome.runtime.lastError;
-    //     if (error) {
-    //         console.error(error);
-    //     }
-    // });
      //chrome storage
     // by passing an object you can define default values e.g.: []
     chrome.storage.local.get({issues: []}, function (result) {
