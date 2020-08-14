@@ -30,14 +30,13 @@ document.querySelector('#doneEditImage').addEventListener('click', function(e) {
 });
 
 
-var convasCropOffsetTop = document.getElementById('canvasCrop').offsetTop;
-var convasCropOffsetLeft = document.getElementById('canvasCrop').offsetLeft;
+var canvasCrop = document.getElementById('canvasCrop');
 
 $('#canvas').mousedown(function(e){
 
     
-    var mouseX = e.pageX - this.offsetLeft - convasCropOffsetLeft;
-    var mouseY = e.pageY - this.offsetTop - convasCropOffsetTop;
+    var mouseX = e.pageX - this.offsetLeft - canvasCrop.offsetLeft;
+    var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
     paint = true;
     addClick(mouseX, mouseY);
     redraw();
@@ -45,7 +44,7 @@ $('#canvas').mousedown(function(e){
 
 $('#canvas').mousemove(function(e){
     if(paint){
-      addClick(e.pageX - this.offsetLeft - convasCropOffsetLeft, e.pageY - this.offsetTop - convasCropOffsetTop, true);
+      addClick(e.pageX - this.offsetLeft - canvasCrop.offsetLeft, e.pageY - this.offsetTop - canvasCrop.offsetTop, true);
       redraw();
     }
 });
