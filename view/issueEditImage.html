@@ -1,17 +1,37 @@
 <html>
     <head>
-
+        <style>
+            #toolbar{
+                border: 1px solid black; 
+                position: absolute; 
+                z-index:2; 
+                top: 0; left: 0;
+                width: 150;
+                height: 100%;
+                padding: 5px;
+            }
+        </style>
+        <link rel="stylesheet" href="/css/semantic.min.css" >
     </head>
     <body>
         <div id="issueImageContainer">
-            <div id="convasCrop" style="display:inline-block;">
-              <img id="editingImage" >
-              <p style="color:white; position: absolute; font-size: 30px; top: 50px; left: 50px;">aaaa</p>
+            <div id="toolbar">
+                <button class="ui icon button">
+                    <i class="pencil alternate icon"></i>
+                </button>
             </div>
-            <button id="doneEditImage">Done editing image</button>
+            <div id="canvasCrop" style="display:inline-block; position:relative; margin: 100px 0px 0px 100px;">
+                <img id="canvasImage" style="z-index:1; position: absolute; z-index:2; top: 0; left: 0;" >
+                <img id="editingImage" style="z-index:1; position: absolute; z-index:2; top: 0; left: 0;" >
+
+                <canvas id="canvas" width="100%" height="100%" style="border: 1px solid black; position: absolute; z-index:2; top: 0; left: 0;"></canvas>
+            </div>
+
+            <button id="doneEditImage" style="margin-right: 200px; z-index:200; position:absolute; right: 0px;">Done editing images</button>
         </div>
+        <script src="/javascript/jquery-3.5.1.slim.min.js"></script>
         <script src="/view_javascript/issueEditImage.js"></script>
         <script src="/javascript/html2canvas.min.js"></script>
-
+        <script src="/javascript/semantic.min.js"></script>
     </body>
 </html>
