@@ -1,5 +1,6 @@
 
 var context;
+var drawMode = "off";
 window.addEventListener("load", function(){
     var img = document.querySelector('#editingImage');
     img.width = 1150;
@@ -30,11 +31,23 @@ document.querySelector('#doneEditImage').addEventListener('click', function(e) {
 });
 
 
+$('#penBtn').click(function(e) {
+    e.preventDefault();
+    if($(this).hasClass('active')){
+        $(this).removeClass('active');
+        drawMode = "off";
+    } else {
+        $(this).addClass('active');
+        drawMode = "pen";
+    }
+});
+
+
 var canvasCrop = document.getElementById('canvasCrop');
 
 $('#canvas').mousedown(function(e){
-
-    
+    if(drawMode != "pen")
+        return;
     var mouseX = e.pageX - this.offsetLeft - canvasCrop.offsetLeft;
     var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
     paint = true;
@@ -43,6 +56,8 @@ $('#canvas').mousedown(function(e){
 });
 
 $('#canvas').mousemove(function(e){
+    if(drawMode != "pen")
+        return;
     if(paint){
       addClick(e.pageX - this.offsetLeft - canvasCrop.offsetLeft, e.pageY - this.offsetTop - canvasCrop.offsetTop, true);
       redraw();
@@ -50,12 +65,12 @@ $('#canvas').mousemove(function(e){
 });
 
 $('#canvas').mouseup(function(e){
-paint = false;
+    paint = false;
 });
 
 $('#canvas').mouseleave(function(e){
     paint = false;
-  });
+});
 
 var clickX = new Array();
 var clickY = new Array();
