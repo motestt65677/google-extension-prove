@@ -17,15 +17,38 @@
             body {
                 background-color: gray !important;
             }
+            .circular-color{
+                width: 5px !important;
+            }
+            #color1 {
+                -webkit-appearance: none;
+                padding: 0;
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+            #color1::-webkit-color-swatch {
+                border: none;
+                border-radius: 50%;
+                padding: 0;
+            }
+            #color1::-webkit-color-swatch-wrapper {
+                border: none;
+                border-radius: 50%;
+                padding: 0;
+            }
         </style>
         <link rel="stylesheet" href="/css/semantic.min.css" >
     </head>
     <body>
         <div id="issueImageContainer">
             <div id="toolbar">
-                <button id="penBtn" class="ui icon circular button">
+                <button id="penBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
                     <i class="pencil alternate icon"></i>
                 </button>
+                <span id="color-container" class="ui icon circular huge button">
+                    <input id="color1" type="color" value="#e66465" class="icon" >
+                </span>
             </div>
             <div id="canvasCrop" style="display:inline-block; position:relative; margin: 100px 0px 0px 100px;">
                 <img id="canvasImage" style="z-index:1; position: absolute; z-index:2; top: 0; left: 0;" >

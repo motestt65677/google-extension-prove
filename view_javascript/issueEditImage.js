@@ -42,7 +42,13 @@ $('#penBtn').click(function(e) {
     }
 });
 
-
+$("#color-container").click(function(){
+    // $("#color1").click();
+    document.querySelector('#color1').click();
+})
+// $("#color1").change(function(){
+//     $(this).val();
+// })
 var canvasCrop = document.getElementById('canvasCrop');
 
 $('#canvas').mousedown(function(e){
@@ -66,6 +72,9 @@ $('#canvas').mousemove(function(e){
 
 $('#canvas').mouseup(function(e){
     paint = false;
+    clickX = [];
+    clickY = [];
+    clickDrag = [];
 });
 
 $('#canvas').mouseleave(function(e){
@@ -85,9 +94,10 @@ function addClick(x, y, dragging)
 }
 
 function redraw(){
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+    var color = document.querySelector("#color1").value;
+    // context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
     
-    context.strokeStyle = "#df4b26";
+    context.strokeStyle = color;
     context.lineJoin = "round";
     context.lineWidth = 5;
               
