@@ -1,6 +1,7 @@
 
 var context;
 var drawMode = "off";
+var mouseDown = false;
 window.addEventListener("load", function(){
     var img = document.querySelector('#editingImage');
     img.width = 1150;
@@ -13,6 +14,8 @@ window.addEventListener("load", function(){
     } else {
         img.addEventListener('load', setUpDraw);
     }
+
+    $('#penBtn').click();
 });
 
 
@@ -33,44 +36,67 @@ document.querySelector('#doneEditImage').addEventListener('click', function(e) {
 
 $('#penBtn').click(function(e) {
     e.preventDefault();
+    $(".ui.icon.circular.huge.button").removeClass('active');
+
     if($(this).hasClass('active')){
         $(this).removeClass('active');
         drawMode = "off";
     } else {
         $(this).addClass('active');
         drawMode = "pen";
+        context.globalCompositeOperation="source-over";
+    }
+});
+
+$('#eraserBtn').click(function(e) {
+    e.preventDefault();
+    $(".ui.icon.circular.huge.button").removeClass('active');
+
+    if($(this).hasClass('active')){
+        $(this).removeClass('active');
+        drawMode = "off";
+    } else {
+        $(this).addClass('active');
+        drawMode = "eraser";
+        context.globalCompositeOperation="destination-out";
     }
 });
 
 $("#color-container").click(function(){
-    // $("#color1").click();
     document.querySelector('#color1').click();
 })
-// $("#color1").change(function(){
-//     $(this).val();
-// })
+
 var canvasCrop = document.getElementById('canvasCrop');
 
 $('#canvas').mousedown(function(e){
-    if(drawMode != "pen")
-        return;
+    mouseDown = true;
     var mouseX = e.pageX - this.offsetLeft - canvasCrop.offsetLeft;
     var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
-    paint = true;
-    addClick(mouseX, mouseY);
-    redraw();
+    if(drawMode == "pen"){
+        paint = true;
+        addClick(mouseX, mouseY);
+        redraw();
+    } 
 });
 
 $('#canvas').mousemove(function(e){
-    if(drawMode != "pen")
-        return;
-    if(paint){
-      addClick(e.pageX - this.offsetLeft - canvasCrop.offsetLeft, e.pageY - this.offsetTop - canvasCrop.offsetTop, true);
-      redraw();
+    var mouseX = e.pageX - this.offsetLeft - canvasCrop.offsetLeft;
+    var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
+    if(drawMode == "pen" && paint){
+        addClick(mouseX, mouseY, true);
+        redraw();
+    } else if(drawMode == "eraser" && mouseDown){
+        // context.arc(x,y,8,0,Math.PI*2,false);
+
+        addClick(mouseX, mouseY, true);
+
+        redraw();
+
     }
 });
 
 $('#canvas').mouseup(function(e){
+    mouseDown = false;
     paint = false;
     clickX = [];
     clickY = [];
