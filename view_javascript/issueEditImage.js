@@ -15,7 +15,6 @@ window.addEventListener("load", function(){
         img.addEventListener('load', setUpDraw);
     }
 
-    $('#penBtn').click();
 });
 
 
@@ -36,30 +35,22 @@ document.querySelector('#doneEditImage').addEventListener('click', function(e) {
 
 $('#penBtn').click(function(e) {
     e.preventDefault();
-    $(".ui.icon.circular.huge.button").removeClass('active');
-
-    if($(this).hasClass('active')){
-        $(this).removeClass('active');
-        drawMode = "off";
-    } else {
-        $(this).addClass('active');
-        drawMode = "pen";
-        context.globalCompositeOperation="source-over";
-    }
+    resetToolBars();
+    $("#title").html("Draw");
+    $(this).addClass('active');
+    drawMode = "pen";
+    context.globalCompositeOperation="source-over";
+    $("#thickness-container-draw").show();
 });
 
 $('#eraserBtn').click(function(e) {
     e.preventDefault();
-    $(".ui.icon.circular.huge.button").removeClass('active');
-
-    if($(this).hasClass('active')){
-        $(this).removeClass('active');
-        drawMode = "off";
-    } else {
-        $(this).addClass('active');
-        drawMode = "eraser";
-        context.globalCompositeOperation="destination-out";
-    }
+    resetToolBars();
+    $("#title").html("Erase");
+    $(this).addClass('active');
+    drawMode = "eraser";
+    context.globalCompositeOperation="destination-out";
+    $("#thickness-container-erase").show();
 });
 
 $("#color-container").click(function(){
@@ -75,7 +66,7 @@ $('#canvas').mousedown(function(e){
     if(drawMode == "pen"){
         paint = true;
         addClick(mouseX, mouseY);
-        redraw();
+        redraw(document.querySelector('#thickness-draw').value);
     } 
 });
 
@@ -84,14 +75,10 @@ $('#canvas').mousemove(function(e){
     var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
     if(drawMode == "pen" && paint){
         addClick(mouseX, mouseY, true);
-        redraw();
+        redraw(document.querySelector('#thickness-draw').value);
     } else if(drawMode == "eraser" && mouseDown){
-        // context.arc(x,y,8,0,Math.PI*2,false);
-
         addClick(mouseX, mouseY, true);
-
-        redraw();
-
+        redraw(document.querySelector('#thickness-erase').value);
     }
 });
 
@@ -112,6 +99,16 @@ var clickY = new Array();
 var clickDrag = new Array();
 var paint;
 
+
+function resetToolBars(){
+    $(".ui.icon.circular.huge.button").removeClass('active');
+    $("#thickness-container").hide();
+    drawMode = "off";
+    $("#title").html("");
+    $("#thickness-container-draw").hide();
+    $("#thickness-container-erase").hide();
+
+}
 function addClick(x, y, dragging)
 {
   clickX.push(x);
@@ -119,13 +116,15 @@ function addClick(x, y, dragging)
   clickDrag.push(dragging);
 }
 
-function redraw(){
+function redraw(thickness){
     var color = document.querySelector("#color1").value;
+    var thickness = thickness;
+
     // context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
     
     context.strokeStyle = color;
     context.lineJoin = "round";
-    context.lineWidth = 5;
+    context.lineWidth = thickness;
               
     for(var i=0; i < clickX.length; i++) {		
       context.beginPath();
@@ -186,5 +185,5 @@ function setUpDraw(){
     canvasCrop.style.height = img.height-1;
 
     context = document.getElementById('canvas').getContext("2d");
-
+    $('#penBtn').click();
 }

@@ -8,8 +8,17 @@
                 width: 100;
                 height: 100%;
                 text-align: center;
-                padding-top: 10%;
+                padding-top: 20%;
                 background-color: gray;
+            }
+            #toolbar2{
+                /* border: 1px solid black; */
+                position: absolute; 
+                z-index:3; 
+                top: 0; left: 0;
+                width: 100%;
+                height: 50;
+                background-color: lightgray; 
             }
             #issueImageContainer{
                 background-color: gray;
@@ -37,11 +46,47 @@
                 border-radius: 50%;
                 padding: 0;
             }
+            .thickness{
+                position: absolute; 
+                bottom: 26%;
+                /* left:20%; */
+                background-color: transparent; 
+                /* width: 12.5%;  */
+                appearance:none; 
+                outline: none; 
+                box-sizing: border-box;
+            }
+            .thickness-image{
+                z-index:-1; 
+                position:absolute; 
+                bottom:0; 
+                /* left:20%;  */
+                width: 10em; 
+            }
+            
+            
         </style>
         <link rel="stylesheet" href="/css/semantic.min.css" >
     </head>
     <body>
         <div id="issueImageContainer">
+            <div id="toolbar2">
+                <h2 id="title" style="position:absolute; left: 100; bottom: 1px;">Prove</h2>
+                <div id="thickness-container-draw" style="display:none;">
+                    <div style="width: 25%; height: 100%; position: absolute; left: 200px; bottom: 1px;">
+                        &nbsp
+                        <img src="/images/stroke-width.svg" alt="" class="thickness-image">
+                        <input type="range" min="1" max="30" step="1" value="5" class="thickness" id="thickness-draw">
+                    </div>
+                </div>
+                <div id="thickness-container-erase" style="display:none;">
+                    <div style="width: 25%; height: 100%; position: absolute; left: 200px; bottom: 1px;">
+                        &nbsp
+                        <img src="/images/stroke-width.svg" alt="" class="thickness-image">
+                        <input type="range" min="1" max="50" step="1" value="5" class="thickness" id="thickness-erase">
+                    </div>
+                </div>
+            </div>
             <div id="toolbar">
                 <button id="penBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
                     <i class="pencil alternate icon"></i>
@@ -52,6 +97,7 @@
                 <span id="color-container" class="ui icon circular huge button">
                     <input id="color1" type="color" value="#e66465" class="icon" >
                 </span>
+
             </div>
             <div id="canvasCrop" style="display:inline-block; position:relative; margin: 100px 0px 0px 100px;">
                 <img id="canvasImage" style="z-index:1; position: absolute; z-index:2; top: 0; left: 0;" >
@@ -59,6 +105,8 @@
 
                 <canvas id="canvas" width="100%" height="100%" style="border: 1px solid black; position: absolute; z-index:2; top: 0; left: 0;"></canvas>
             </div>
+
+
 
             <button id="doneEditImage" style="margin-right: 200px; z-index:200; position:absolute; right: 0px;">Done editing images</button>
         </div>
