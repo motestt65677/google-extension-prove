@@ -74,10 +74,10 @@ function onAccessApproved(desktop_id) {
             mandatory: {
                 chromeMediaSource: 'desktop',
                 chromeMediaSourceId: desktop_id,
-                minWidth: 1280,
-                maxWidth: 1280,
-                minHeight: 720,
-                maxHeight: 720
+                minWidth: window.innerWidth,
+                maxWidth: window.innerWidth,
+                minHeight: window.innerHeight,
+                maxHeight: window.innerHeight
             }
         }
     }, gotStream, getUserMediaError);
@@ -90,8 +90,8 @@ function onAccessApproved(desktop_id) {
         video.onloadedmetadata = function() {
 
             var canvas = document.createElement('canvas');
-            canvas.width = 1280;
-            canvas.height = 720;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
             var ctx = canvas.getContext('2d');
             //draw image to canvas. scale to target dimensions
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -104,7 +104,7 @@ function onAccessApproved(desktop_id) {
                 desktop_sharing = false;
             }
 
-            var childWindow = popupCenter({url: "/view/issueEditImage.html", title: "aaa", w: 1300, h: 800,});    
+            var childWindow = popupCenter({url: "/view/issueEditImage.html", title: "aaa", w: window.innerWidth, h: window.innerHeight,});    
             childWindow.dataURI = dataURI;  
 
         };
@@ -156,7 +156,7 @@ document.querySelector('#addImage').addEventListener('click', function(e) {
 });
 
 document.querySelector('#doneEditImage').addEventListener('click', function(e) {
-    html2canvas(document.querySelector("#convasCrop"), {scale:1}).then(canvas => {
+    html2canvas(document.querySelector("#convasCrop")).then(canvas => {
         var imageExist = document.getElementById('editedImage');
         if(imageExist != undefined)
             return;

@@ -4,7 +4,7 @@ var drawMode = "off";
 var mouseDown = false;
 window.addEventListener("load", function(){
     var img = document.querySelector('#editingImage');
-    img.width = 1150;
+    img.width = window.innerWidth * .90;
     img.setAttribute("object-fit", "cover");
     img.src = window.dataURI;
 
