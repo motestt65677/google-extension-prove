@@ -1,6 +1,15 @@
 <html>
 <head>
   <style>
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background-color: brown;
+      color: white;
+      text-align: center;
+    }
   </style>
   <link rel="stylesheet" href="/css/semantic.min.css" >
 </head>
@@ -10,6 +19,8 @@
     <div style="margin-bottom: 25px;">
       &nbsp
       <a href="/view/issueNew.html" class="ui teal right floated basic button">New Issue</a>
+      <button id="gitlab" class="ui blue right floated basic button">Add To Gitlab</button>
+
     </div>
 
     <div class="ui secondary pointing menu">
@@ -28,8 +39,15 @@
       </div>
     </div>
   </div>
+  <footer class="footer">
+    <div>
+      Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+      Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+    </div>
+  
+  </footer>
 <script src="/javascript/html2canvas.min.js"></script>
-<script src="/javascript/jquery-3.5.1.slim.min.js"></script>
+<script src="/javascript/jquery-3.5.1.js"></script>
 <!-- <script src="popper.min.js"></script> -->
 <!-- <script src="bootstrap.min.js"></script> -->
 <script src="/javascript/semantic.min.js"></script>
