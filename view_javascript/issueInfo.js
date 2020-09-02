@@ -3,11 +3,19 @@ var reopenIssueBtn = document.getElementById('reopenIssue');
 var editIssueBtn = document.getElementById('editIssue');
 var saveIssueBtn = document.getElementById('saveIssue');
 
-
-
 var urlParams = new URLSearchParams(window.location.search);
 var id = urlParams.get('id');
 var mode = "info";
+
+var desktop_sharing = false;
+var local_stream = null;
+var status = "home"; //home, screen shot, edit image, edit issue
+var editingImages = [];
+
+$('.ui.radio.checkbox')
+  .checkbox()
+;
+
 window.addEventListener("load", function(){
 
     // console.log(id)
@@ -122,45 +130,10 @@ saveIssueBtn.addEventListener('click', function(){
    
 
 });
-// function closeIssue(id){
-//     chrome.storage.local.get([id], function (item) {
-//         var thisItem= item[id];
-//         // console.log(thisItem);
-//         document.getElementById('title').innerHTML = thisItem.title;
-//         document.getElementById('priority').innerHTML = thisItem.priority;
-//         document.getElementById('browser').innerHTML = thisItem.browser;
-//         document.getElementById('url').innerHTML = thisItem.url;
-//         document.getElementById('expected_result').innerHTML = thisItem.expected_result;
-//         document.getElementById('actual_result').innerHTML = thisItem.actual_result;
-//         document.getElementById('steps').innerHTML = thisItem.steps;
-//         document.getElementById('description').innerHTML = thisItem.description;
 
-//         var images = thisItem.images;
-//         var imageList = document.getElementById('imageList');
-//         for(var i = 0; i < images.length; i++){
-//             var thisImage = getOriginImage(images[i]);
-//             imageList.appendChild(thisImage);
-//         }
-
-//     });
-// }
-
-function getOriginImage(url){
-    var img = document.createElement('img');
-    img.width = 1000;
-    img.setAttribute("object-fit", "cover");
-    img.src = url;
-    img.classList.add('screen-shot');
-    return img
-}
-
-function getPreviewImage(url){
-    var img = document.createElement('img');
-    img.width = 300;
-    img.setAttribute("object-fit", "cover");
-    img.src = url;
-    return img
-}
+document.querySelector('#addImage').addEventListener('click', function(e) {
+    toggle();
+});
 
 function loadInfo(){
     chrome.storage.local.get([id], function (item) {
@@ -219,63 +192,19 @@ function loadEdit(){
     
 }
 
-var desktop_sharing = false;
-var local_stream = null;
-var status = "home"; //home, screen shot, edit image, edit issue
-var editingImages = [];
 
-$('.ui.radio.checkbox')
-  .checkbox()
-;
 
 function toggle() {
     if (!desktop_sharing) {
         chrome.desktopCapture.chooseDesktopMedia(["window"], onAccessApproved);
     } 
-
-    // else {
-    //     desktop_sharing = false;
-
-    //     if (local_stream)
-    //         local_stream.getVideoTracks()[0].stop();
-    //     // local_stream = null;
-
-    //     document.querySelector('button').innerHTML = "Enable Capture";
-    //     console.log('Desktop sharing stopped...');
-    //     status = "edit image";
-    // }
 }
 function showEditIssue(){
     document.getElementById('issueImageContainer').style.display = 'none';
     document.getElementById('editIssueContainer').style.display = 'block';
 }
 
-function getPreviewImage(url){
-    var img = document.createElement('img');
-    img.width = 300;
-    img.setAttribute("object-fit", "cover");
-    img.src = url;
 
-    var item = document.createElement('div');
-    item.classList.add("item");
-    item.appendChild(img);
-
-    return item
-}
-
-function getPreviewImageItem(url){
-
-    var img = document.createElement('img');
-    img.width = 300;
-    img.setAttribute("object-fit", "cover");
-    img.src = url;
-
-    var item = document.createElement('div');
-    item.classList.add("item");
-    item.appendChild(img);
-
-    return item
-}
 
 
 function onAccessApproved(desktop_id) {
@@ -337,40 +266,11 @@ function onAccessApproved(desktop_id) {
     }
 }
 
-var ID = function () {
-    var date = new Date();
-    return '_' + date.getTime();
-};
 
-var popupCenter = ({url, title, w, h}) => {
-    // Fixes dual-screen position                             Most browsers      Firefox
-    const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
-    const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
 
-    const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-    const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
 
-    const systemZoom = width / window.screen.availWidth;
-    const left = (width - w) / 2 / systemZoom + dualScreenLeft
-    const top = (height - h) / 2 / systemZoom + dualScreenTop
-    const newWindow = window.open(url, title, 
-      `
-      scrollbars=yes,
-      width=${w / systemZoom}, 
-      height=${h / systemZoom}, 
-      top=${top}, 
-      left=${left}
-      `
-    )
 
-    if (window.focus) newWindow.focus();
 
-    return newWindow;
-}
-
-document.querySelector('#addImage').addEventListener('click', function(e) {
-    toggle();
-});
 
 // document.querySelector('#doneEditImage').addEventListener('click', function(e) {
 //     html2canvas(document.querySelector("#convasCrop")).then(canvas => {
