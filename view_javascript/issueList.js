@@ -25,10 +25,17 @@ window.addEventListener("load", function(){
 });
 
 $('[data-tab]').click(function(){
-    loadIssues($(this).data('tab'))
+    var status = $(this).data('tab');
+    loadIssues(status);
+    if(status == "open")
+        $("#gitlab").show();
+    else
+        $("#gitlab").hide();
+
 });
 $('#gitlab').click(function(){
     $('#gitlab').prop('disabled', true);
+    $('#gitlab').addClass("loading");
     // var id = "_1598507751746";
     // var id = "_1597817455434";
     var url = "http://localhost:9990/addFileToGitLabProject";
@@ -119,10 +126,6 @@ $('#gitlab').click(function(){
                 dataType: "json",
                 
                 success: function(data){
-                    console.log("done");
-
-                    console.log(data);
-
                     //add gitlab info
                     // var thisItem = item[thisIssueId];
                     thisIssue.gitlab = data;
@@ -146,7 +149,10 @@ $('#gitlab').click(function(){
         }
 
         $('#gitlab').prop('disabled', false);
+        $('#gitlab').removeClass("loading");
+        var status = $('[data-tab]').data('tab');
 
+        loadIssues(status);
     });
 
     // $('#gitlab').prop('disabled', false);

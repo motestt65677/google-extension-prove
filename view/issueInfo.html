@@ -4,14 +4,31 @@
   .screen-shot{
     margin: 10px;
   }
-
+  .input-width{
+    width: 80% !important;
+  }
+  .label{
+    text-align:right;
+    font-weight: bold;
+  }
+  .v-align-middle{
+    margin: auto 0 !important;
+  }
+  .gap{
+    width:3%;
+  }
+  .row-height{
+    min-height: 3em;
+  }
 </style>
 <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
 <link rel="stylesheet" href="/css/semantic.min.css" >
 
 </head>
 <body>
-  
+  <div id="lowerLevel" style="z-index: 0; position: absolute; top: 0; left: 0; background-color: black;">
+    <video autoplay style="position: absolute; width: 100%; height:100%;" ></video>
+  </div>
   <div id="upperLevel" >
     <!-- <div id="issueImageContainer" style="display:none;">
       <div id="convasCrop" style="display:inline-block;">
@@ -29,9 +46,9 @@
       
       <div class="container ui" style="margin-top: 30px;">
         <h3 id="title" class="ui header" style="display: inline-block;">Title</h3>
-        
-        <button id="closeIssue" class="ui orange basic right floated button" style="display:none;">Close issue</button>
-        <button id="reopenIssue" class="ui gray basic right floated button" style="display:none;">Reopen issue</button>
+
+        <button id="closeIssue" class="ui orange basic right floated button" style="display:none;">Close Issue</button>
+        <button id="reopenIssue" class="ui gray basic right floated button" style="display:none;">Reopen Issue</button>
         <a href="/view/issueList.html" class="ui animated right floated basic button" tabindex="0">
             <div class="visible content"><i class="arrow left icon"></i></div>
             <div class="hidden content">
@@ -39,46 +56,166 @@
             </div>
         </a>
         <div class="ui section divider"></div>
-        <!-- <div id="imageList" style="display: inline-block;">
-        </div> -->
 
+        
+        <div style="text-align: right;">
+          <button id="saveIssue" class="ui icon button" style="display:none;">
+            <i class="save icon"></i>
+          </button>
+          <button id="editIssue" class="ui icon button">
+            <i class="edit icon"></i>
+          </button>
+        </div>
+        <div id="editContainer" class="ui form" style="display:none;">
+          
+          <div id="priorityEditContainer" class="fields row-height">
+            <label class="two wide field v-align-middle label v-align-middle" style="text-align:right;">Priority</label>
+            <div class="gap"></div>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox v-align-middle">
+                <input type="radio" name="priority" checked="" tabindex="0" class="hidden" value="low">
+                <label>Low</label>
+              </div>
+            </div>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="priority" tabindex="0" class="hidden" value="medium">
+                <label>Medium</label>
+              </div>
+            </div>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="priority" tabindex="0" class="hidden" value="high">
+                <label>High</label>
+              </div>
+            </div>
+          </div>
 
-        <div class="ui form">
-            <div class="inline field">
-                <label>Priority: </label>
-                <span id="priority"></span>
+          <div id="browserEditContainer" class="fields row-height">
+            <label class="two wide field v-align-middle label v-align-middle" style="text-align:right;">Browser </label>
+            <div class="gap"></div>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" checked="" tabindex="0" class="hidden" value="chrome">
+                <label>Chrome</label>
+              </div>
             </div>
-            <div class="inline field">
-                <label>Browser: </label>
-                <span id="browser"></span>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" tabindex="0" class="hidden" value="firefox">
+                <label>Firefox</label>
+              </div>
             </div>
-            <div class="inline field">
-                <label>Url: </label>
-                <span id="url"></span>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" tabindex="0" class="hidden" value="safari">
+                <label>Safari</label>
+              </div>
             </div>
-            <div class="inline field">
-                <label>Expected result: </label>
-                <span id="expected_result"></span>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" tabindex="0" class="hidden" value="edge">
+                <label>Edge</label>
+              </div>
             </div>
-            <div class="inline field">
-                <label>Actual result: </label>
-                <span id="actual_result"></span>
+          </div>
+
+          <div id="urlEditContainer" class="fields row-height" >
+            <label class="two wide field label v-align-middle" >Url</label>
+            <div class="gap"></div>
+            <input type="text" class="field form-control input-width" id="url_edit">
+          </div>
+
+          <div id="expectedResultEditContainer" class="fields row-height">
+            <label class="two wide field label v-align-middle">Expected Result</label>
+            <div class="gap"></div>
+            <input type="text" class="field form-control input-width" id="expected_result_edit">
+          </div>
+
+          <div id="actualResultEditContainer" class="fields row-height">
+            <label class="two wide field label v-align-middle">Actual Result</label>
+            <div class="gap"></div>
+            <input type="text" class="field form-control input-width" id="actual_result_edit">
+          </div>
+
+          <div id="stepsEditContainer" class="fields row-height">
+            <label class="two wide field label">Steps To Reproduce</label>
+            <div class="gap"></div>
+            <textarea type="text" class="field form-control input-width" id="steps_edit"></textarea>
+          </div>
+
+          <div id="descriptionEditContainer" class="fields row-height">
+            <label class="two wide field label">Descriptions</label>
+            <div class="gap"></div>
+            <textarea type="text" class="field form-control input-width" id="description_edit"></textarea>
+          </div>
+          <div id="screenshotEditContainer" class="fields row-height">
+            <label class="two wide field label">Screen Shots</label>
+            <div class="gap"></div>
+            
+          </div>
+          <div>
+            <div id="imageList" class="ui horizontal list" style="min-height: 100px; min-width: 150px; border: 1px dashed black; margin: 10px; vertical-align: middle; padding: 8px 12px 8px 12px;">
             </div>
-            <div class="inline field">
-                <label>Steps to reproduce: </label>
-                <span id="steps"></span>
+            <button id="addImage"  style="display:inline-block; width: 30px; height: 30px; margin: auto; ">+</button>
+  
+          </div>
+        </div>
+
+        <div id="infoContainer" class="ui form" >
+          
+          <div id="priorityInfoContainer" class="fields row-height">
+            <label class="two wide field label v-align-middle">Priority</label>
+            <div class="gap"></div>
+            <span id="priority" class="v-align-middle"></span>
+          </div>
+          
+
+          <div id="browserInfoContainer" class="fields row-height">
+            <label class="two wide field label v-align-middle">Browser</label>
+            <div class="gap"></div>
+            <span id="browser" class="v-align-middle"></span>
+          </div>
+
+          
+          <div id="urlInfoContainer" class="fields row-height">
+            <label class="two wide field label v-align-middle">Url</label>
+            <div class="gap"></div>
+            <span id="url" class="v-align-middle"></span>
+          </div>
+          
+
+          <div id="expectedResultInfoContainer" class="fields row-height">
+            <label class="two wide field label v-align-middle">Expected Result</label>
+            <div class="gap"></div>
+            <span id="expected_result" class="v-align-middle"></span>
+          </div>
+          
+          <div id="actualResultInfoContainer" class="fields row-height">
+            <label class="two wide field label v-align-middle">Actual Result</label>
+            <div class="gap"></div>
+            <span id="actual_result" class="v-align-middle"></span>
+          </div>
+          
+          <div id="stepsInfoContainer" class="fields row-height">
+            <label class="two wide field label">Steps To Reproduce</label>
+            <div class="gap"></div>
+            <span id="steps" class=""></span>
+          </div>
+          
+          <div id="descriptionInfoContainer" class="fields row-height">
+            <label class="two wide field label">Descriptions</label>
+            <div class="gap"></div>
+            <span id="description" class="v-align-middle"></span>
+          </div>
+          
+          <div id="screenshotInfoContainer" class="fields row-height">
+            <label class="two wide field label">Screen Shots</label>
+          </div>
+          <div>
+            <div id="imageListInfo" class="ui horizontal list" style="min-height: 100px; min-width: 150px; border: 1px dashed black; margin: 10px; vertical-align: middle; padding: 8px 12px 8px 12px;">
             </div>
-            <div class="inline field">
-                <label>Descriptions: </label>
-                <span id="description"></span>
-            </div>
-            <div class="field">
-                <label>Screen Shots: </label>
-                <div>
-                    <div id="imageList" class="ui horizontal list">
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
         
         
