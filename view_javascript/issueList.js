@@ -266,22 +266,26 @@ function loadIssues(status){
             header.classList.add('header');
             header.innerHTML = thisIssue.title;
 
+            // console.log(thisIssue);
+            var gitlabSpan = document.createElement('span');
+            gitlabSpan.classList.add("gitlabSpan");
+
+            var sectionTwo = document.createElement('span');
+            sectionTwo.classList.add('sectionTwo');
+            var sectionOne = document.createElement('span');
+            sectionOne.classList.add('sectionOne');
+
+            if(thisIssue.modified){
+                var needSyncIcon = document.createElement('i');
+                needSyncIcon.classList.add("sync");
+                needSyncIcon.classList.add("icon");
+                needSyncIcon.classList.add("mr-1");
+                sectionTwo.appendChild(needSyncIcon);
+
+            }
             //adding gitlab icon if issue is on gitlab
             if("gitlab" in thisIssue){
-                // console.log(thisIssue);
-                var gitlabSpan = document.createElement('span');
-                gitlabSpan.classList.add("gitlabSpan");
-                
 
-                if(thisIssue.modified){
-                    var needSyncIcon = document.createElement('i');
-                    needSyncIcon.classList.add("sync");
-                    needSyncIcon.classList.add("icon");
-                    needSyncIcon.classList.add("mr-1");
-
-                    gitlabSpan.appendChild(needSyncIcon);
-
-                }
                 var gitlabIcon = document.createElement('i');
                 gitlabIcon.classList.add("gitlab");
                 gitlabIcon.classList.add("icon");
@@ -291,13 +295,14 @@ function loadIssues(status){
                 issueId.innerHTML = "#" + thisIssue.gitlab.iid;
 
 
-                gitlabSpan.appendChild(gitlabIcon);
-                gitlabSpan.appendChild(issueId);
-
-
-
-                header.appendChild(gitlabSpan);
+                sectionOne.appendChild(gitlabIcon);
+                sectionOne.appendChild(issueId);
             }
+            gitlabSpan.appendChild(sectionOne);
+
+            gitlabSpan.appendChild(sectionTwo);
+
+            header.appendChild(gitlabSpan);
             content.appendChild(header);
 
             item.appendChild(content);
