@@ -25,17 +25,28 @@ window.addEventListener("load", function(){
     $('.ui.radio.checkbox').checkbox();
 
     //load editing images from storage
-    chrome.storage.local.get([id], function (item) {
-        var thisItem = item[id];
+    chrome.storage.local.get('issues', function (item) {
+        var issues = item['issues'];
+        var thisItem = issues[id];
         editingImages = thisItem["images"];
+        console.log(thisItem.status);
+        if(thisItem.status == "open"){
+            $("#reopenIssue").hide();
+            $("#closeIssue").show();
+        } else if(thisItem.status == "closed"){
+            $("#reopenIssue").show();
+            $("#closeIssue").hide();
+        }
     });
 });
 
 closeIssueBtn.addEventListener('click', function(){
-    chrome.storage.local.get([id], function (item) {
-        var thisItem = item[id];
+    chrome.storage.local.get('issues', function (item) {
+        var issues = item['issues'];
+        var thisItem = issues[id];
         thisItem.status = "closed";
-        chrome.storage.local.set({[id]: thisItem}, function(){
+        issues[id] = thisItem;
+        chrome.storage.local.set({'issues': issues}, function(){
             //window.location.href = "/view/issueList.html";
             
             $("#reopenIssue").show();
@@ -46,10 +57,12 @@ closeIssueBtn.addEventListener('click', function(){
 });
 
 reopenIssueBtn.addEventListener('click', function(){
-    chrome.storage.local.get([id], function (item) {
-        var thisItem = item[id];
+    chrome.storage.local.get('issues', function (item) {
+        var issues = item['issues'];
+        var thisItem = issues[id];
         thisItem.status = "open";
-        chrome.storage.local.set({[id]: thisItem}, function(){
+        issues[id] = thisItem;
+        chrome.storage.local.set({'issues': issues}, function(){
             //window.location.href = "/view/issueList.html";
             $("#closeIssue").show();
             $("#reopenIssue").hide();
@@ -93,22 +106,23 @@ saveIssueBtn.addEventListener('click', function(){
        var steps = document.getElementById('steps_edit').value;
        var description = document.getElementById('description_edit').value;
    
-       var obj = {
-           id: id,
-           images: editingImages, 
-           title: title,
-           priority: priority,
-           browser: browser,
-           url: url,
-           expected_result: expected_result,
-           actual_result: actual_result,
-           steps: steps,
-           description: description,
-        //    status: 'open'
-       };
+    //    var obj = {
+    //        id: id,
+    //        images: editingImages, 
+    //        title: title,
+    //        priority: priority,
+    //        browser: browser,
+    //        url: url,
+    //        expected_result: expected_result,
+    //        actual_result: actual_result,
+    //        steps: steps,
+    //        description: description,
+    //     //    status: 'open'
+    //    };
 
-        chrome.storage.local.get([id], function (item) {
-            var thisItem= item[id];
+        chrome.storage.local.get('issues', function (items) {
+            var issues = items["issues"];
+            var thisItem= issues[id];
             thisItem.images = editingImages;
             thisItem.priority = priority;
             thisItem.browser = browser;
@@ -119,7 +133,8 @@ saveIssueBtn.addEventListener('click', function(){
             thisItem.description = description;
             thisItem.modified = true;
 
-            chrome.storage.local.set({[id]: thisItem}, function(){
+            issues[id] = thisItem;
+            chrome.storage.local.set({'issues': issues}, function(){
                 //    window.location.href = "/view/issueList.html";
                 loadInfo();
             }); 
@@ -137,8 +152,9 @@ document.querySelector('#addImage').addEventListener('click', function(e) {
 });
 
 function loadInfo(){
-    chrome.storage.local.get([id], function (item) {
-        var thisItem= item[id];
+    chrome.storage.local.get('issues', function (item) {
+        var issues = item["issues"];
+        var thisItem= issues[id];
         document.getElementById('title').innerHTML = thisItem.title;
         document.getElementById('priority').innerHTML = thisItem.priority;
         document.getElementById('browser').innerHTML = thisItem.browser;
@@ -164,9 +180,9 @@ function loadInfo(){
 }
 
 function loadEdit(){
-    chrome.storage.local.get([id], function (item) {
-
-        var thisItem= item[id];
+    chrome.storage.local.get('issues', function (item) {
+        var issues = item['issues'];
+        var thisItem= issues[id];
         // document.getElementById('priority_edit').value = thisItem.priority;
         // document.getElementById('browser_edit').value = thisItem.browser;
         $("input[name=priority][value='"+thisItem.priority+"']").prop("checked",true);

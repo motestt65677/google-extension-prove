@@ -1,3 +1,5 @@
+var projectInfo;
+
 // changing menu tabs
 $('.ui.secondary.menu').on('click', '.item', function() {
     if(!$(this).hasClass('dropdown')) {
@@ -9,6 +11,14 @@ $('.ui.secondary.menu').on('click', '.item', function() {
 });
 window.addEventListener("load", function(){
     loadIssues('open');
+
+    $('.ui.dropdown').dropdown();
+    chrome.storage.local.get('projectInfo', function (items) {
+        var info = items["projectInfo"];
+        projectInfo = info;
+        $("#projectId").val(projectInfo.projectId);
+        $("#personalAccessToken").val(projectInfo.privateToken);
+    });
 });
 
 $('[data-tab]').click(function(){
@@ -20,23 +30,44 @@ $('[data-tab]').click(function(){
         $("#gitlab").hide();
 
 });
+
+$("#projectInfoBtn").click(function(){
+    $("#projectInfoModal").modal('show');
+});
+$("#saveProjectInfo").click(function(){
+    var projectId = $("#projectId").val();
+    var privateToken = $("#personalAccessToken").val();
+    projectInfo = {
+        projectId: projectId,
+        privateToken: privateToken
+    };
+    chrome.storage.local.set({'projectInfo': projectInfo}, function(){
+        $("#projectInfoModal").modal('hide');
+        
+    }); 
+    // chrome.storage.local.get('projectInfo', function (projectInfo) {
+    //     console.log(projectInfo);
+    // });
+});
+
 $('#gitlab').click(function(){
     $('#gitlab').prop('disabled', true);
     $('#gitlab').addClass("loading");
     // var id = "_1598507751746";
     // var id = "_1597817455434";
     var url = "http://localhost:9990/addFileToGitLabProject";
-    var privateToken = "jirUTEUKh9zj-U5HTwg7"
-    var projectId = "20611880";
+    var projectId = projectInfo["projectId"];
+    var privateToken = projectInfo["privateToken"];
 
     // var waitingAjax = [];
-    chrome.storage.local.get(null, function (items) {
+    chrome.storage.local.get('issues', function (items) {
         // the input argument is ALWAYS an object containing the queried keys
         // so we select the key we need
-        var allKeys = Object.keys(items);
+        var issues = items["issues"];
+        var allKeys = Object.keys(issues);
+
         for(var i = 0; i< allKeys.length; i++){
-            var thisIssue = items[allKeys[i]];
-            var thisIssueId = allKeys[i];
+            var thisIssue = issues[allKeys[i]];
             var thisStatus = thisIssue.status;
             var imageLinks = [];
 
@@ -108,21 +139,13 @@ $('#gitlab').click(function(){
                     
                     success: function(data){
                         //add gitlab info
-                        // var thisItem = item[thisIssueId];
                         thisIssue.gitlab = data;
                         thisIssue.modified = false;
                         // console.log(thisItem);
-                        chrome.storage.local.set({[thisIssueId]: thisIssue}); 
-                        
-                        
-                        // waitingAjax.push(thisIssueId);
-                        // var index = waitingAjax.indexOf(thisIssueId);
-                        // if (index > -1) 
-                        //     waitingAjax.splice(index, 1);
-                        
-                        // if(waitingAjax.length == 0)
-                        //     $('#gitlab').prop('disabled', false);
+                        issues[thisIssue.id] = thisIssue;
 
+                        chrome.storage.local.set({'issues': issues}); 
+                        
                     },
                     failure: function(errMsg) {
                         alert(errMsg);
@@ -145,20 +168,9 @@ $('#gitlab').click(function(){
                     
                     success: function(data){
                         //add gitlab info
-                        // var thisItem = item[thisIssueId];
                         thisIssue.gitlab = data;
-                        // console.log(thisItem);
-                        chrome.storage.local.set({[thisIssueId]: thisIssue}); 
-                        
-                        
-                        // waitingAjax.push(thisIssueId);
-                        // var index = waitingAjax.indexOf(thisIssueId);
-                        // if (index > -1) 
-                        //     waitingAjax.splice(index, 1);
-                        
-                        // if(waitingAjax.length == 0)
-                        //     $('#gitlab').prop('disabled', false);
-
+                        issues[thisIssue.id] = thisIssue;
+                        chrome.storage.local.set({'issues': issues}); 
                     },
                     failure: function(errMsg) {
                         alert(errMsg);
@@ -216,31 +228,29 @@ function toInfoPage(){
     window.location.href = "/view/issueInfo.html?id=" + this.id;
 }
 function removeGitlabTags(){
-    chrome.storage.local.get(null, function (items) {
-        var allKeys = Object.keys(items);
+    chrome.storage.local.get('issues', function (items) {
+        var issues = items['issues'];
+        var allKeys = Object.keys(issues);
         for(var i = 0; i< allKeys.length; i++){
-            var thisIssue = items[allKeys[i]];
-            var thisIssueId = thisIssue.id;
-            // console.log(thisIssue);
+            var thisIssue = issues[allKeys[i]];
+            // var thisIssueId = thisIssue.id;
+            // item[thisIssueId] = thisIssueId
             delete thisIssue["gitlab"]; 
-            chrome.storage.local.set({[thisIssueId]: thisIssue}); 
+            chrome.storage.local.set({'issues': issues}); 
         }
     });
 }
 function loadIssues(status){
 
-    // removeGitlabTags();
-
-
-
     // status types: open, closed, all
     document.getElementById('issues').innerHTML = "";
-    chrome.storage.local.get(null, function (items) {
+    chrome.storage.local.get('issues', function (items) {
         // the input argument is ALWAYS an object containing the queried keys
         // so we select the key we need
-        var allKeys = Object.keys(items);
+        var issues = items["issues"];
+        var allKeys = Object.keys(issues);
         for(var i = 0; i< allKeys.length; i++){
-            var thisIssue = items[allKeys[i]];
+            var thisIssue = items["issues"][allKeys[i]];
             var thisStatus = thisIssue.status;
             if(status != "all"){
                 if(status != thisStatus)

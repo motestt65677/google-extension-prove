@@ -67,9 +67,19 @@ document.querySelector('#saveIssue').addEventListener('click', function(e) {
     };
     // issues.push(obj);
     // set the new array value to the same key
-    chrome.storage.local.set({[id]: obj}, function(){
-        window.location.href = "/view/issueList.html";
+    chrome.storage.local.get('issues', function (item) {
+        var issues = item['issues'];
+        issues[id] = obj;
+        chrome.storage.local.set({'issues': issues}, function(){
+            window.location.href = "/view/issueList.html";
+            // chrome.storage.local.get('issues', function (item) {
+            //     console.log(item);
+            // }); 
+
+        }); 
     }); 
+
+
 
 });
 
