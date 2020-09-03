@@ -64,7 +64,7 @@ document.querySelector('#saveIssue').addEventListener('click', function(e) {
         steps: steps,
         description: description,
         status: 'open',
-        modified: true
+        // modified: true
     };
     // issues.push(obj);
     // set the new array value to the same key

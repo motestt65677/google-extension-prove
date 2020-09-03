@@ -89,56 +89,34 @@ saveIssueBtn.addEventListener('click', function(){
     $("#editIssue").show();
     loadInfo();
 
-        //chrome storage clear all
-   
-       // chrome.storage.local.clear(function() {
-       //     var error = chrome.runtime.lastError;
-       //     if (error) {
-       //         console.error(error);
-       //     }
-       // });
-      
-       var priority = $("input[name='priority']:checked").val();
-       var browser = $("input[name='browser']:checked").val();
-       var url = document.getElementById('url_edit').value;
-       var expected_result = document.getElementById('expected_result_edit').value;
-       var actual_result = document.getElementById('actual_result_edit').value;
-       var steps = document.getElementById('steps_edit').value;
-       var description = document.getElementById('description_edit').value;
-   
-    //    var obj = {
-    //        id: id,
-    //        images: editingImages, 
-    //        title: title,
-    //        priority: priority,
-    //        browser: browser,
-    //        url: url,
-    //        expected_result: expected_result,
-    //        actual_result: actual_result,
-    //        steps: steps,
-    //        description: description,
-    //     //    status: 'open'
-    //    };
+    var priority = $("input[name='priority']:checked").val();
+    var browser = $("input[name='browser']:checked").val();
+    var url = document.getElementById('url_edit').value;
+    var expected_result = document.getElementById('expected_result_edit').value;
+    var actual_result = document.getElementById('actual_result_edit').value;
+    var steps = document.getElementById('steps_edit').value;
+    var description = document.getElementById('description_edit').value;
 
-        chrome.storage.local.get('issues', function (items) {
-            var issues = items["issues"];
-            var thisItem= issues[id];
-            thisItem.images = editingImages;
-            thisItem.priority = priority;
-            thisItem.browser = browser;
-            thisItem.url = url;
-            thisItem.expected_result = expected_result;
-            thisItem.actual_result = actual_result;
-            thisItem.steps = steps;
-            thisItem.description = description;
+    chrome.storage.local.get('issues', function (items) {
+        var issues = items["issues"];
+        var thisItem= issues[id];
+        thisItem.images = editingImages;
+        thisItem.priority = priority;
+        thisItem.browser = browser;
+        thisItem.url = url;
+        thisItem.expected_result = expected_result;
+        thisItem.actual_result = actual_result;
+        thisItem.steps = steps;
+        thisItem.description = description;
+        if("gitlab" in thisItem)
             thisItem.modified = true;
 
-            issues[id] = thisItem;
-            chrome.storage.local.set({'issues': issues}, function(){
-                //    window.location.href = "/view/issueList.html";
-                loadInfo();
-            }); 
-        });
+        issues[id] = thisItem;
+        chrome.storage.local.set({'issues': issues}, function(){
+            //    window.location.href = "/view/issueList.html";
+            loadInfo();
+        }); 
+    });
 
        // issues.push(obj);
        // set the new array value to the same key

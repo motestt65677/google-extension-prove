@@ -298,9 +298,9 @@ function loadIssues(status){
                 sectionOne.appendChild(gitlabIcon);
                 sectionOne.appendChild(issueId);
             }
+            gitlabSpan.appendChild(sectionTwo);
             gitlabSpan.appendChild(sectionOne);
 
-            gitlabSpan.appendChild(sectionTwo);
 
             header.appendChild(gitlabSpan);
             content.appendChild(header);
