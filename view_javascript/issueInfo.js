@@ -117,6 +117,7 @@ saveIssueBtn.addEventListener('click', function(){
             thisItem.actual_result = actual_result;
             thisItem.steps = steps;
             thisItem.description = description;
+            thisItem.modified = true;
 
             chrome.storage.local.set({[id]: thisItem}, function(){
                 //    window.location.href = "/view/issueList.html";

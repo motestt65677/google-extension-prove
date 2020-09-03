@@ -9,19 +9,6 @@ $('.ui.secondary.menu').on('click', '.item', function() {
 });
 window.addEventListener("load", function(){
     loadIssues('open');
-    // $.ajax({
-    //     type: "POST",
-    //     url: "https://gitlab.com/api/v4/projects/20611880/issues",
-    //     // The key needs to match your method's input parameter (case-sensitive).
-    //     headers: {"PRIVATE-TOKEN": "jirUTEUKh9zj-U5HTwg7"},
-    //     data: {title: "test5"},
-    //     // contentType: "application/json; charset=utf-8",
-    //     dataType: "json",
-    //     success: function(data){alert(data);},
-    //     failure: function(errMsg) {
-    //         alert(errMsg);
-    //     }
-    // });
 });
 
 $('[data-tab]').click(function(){
@@ -56,15 +43,15 @@ $('#gitlab').click(function(){
             if(thisStatus != "open")
                 continue;
 
-            if("gitlab" in thisIssue)
+            if("gitlab" in thisIssue && !thisIssue.modified)
                 continue;
 
-            // var thisIssue = item[id];
+            //prepare upload data
             var images = thisIssue["images"];
             for(var j = 0; j < images.length; j++){
                 var imageBase64 = thisIssue["images"][j].replace("data:image/png;base64,","");
                 var fileName = guidGenerator() + '.png';
-        
+
                 var blob = base64ToBlob(imageBase64, 'image/png');                
                 var formData = new FormData();
                 formData.append('image', blob);
@@ -82,20 +69,9 @@ $('#gitlab').click(function(){
                     data: formData,
                     async: false,
                     success: function(result) {
-                        // var number = result["number"];
-                        // var markdown = result["markdown"];
                         imageLinks.push(result["markdown"]);
-    
-                        // console.log(result);
-                        // var data = JSON.parse(result);
-
-                        // Run the code here that needs
-                        //    to access the data returned
-                        // return data;
                     },
                 
-                }).done(function(e){
-                    // alert('done!');
                 });
 
             }
@@ -115,37 +91,82 @@ $('#gitlab').click(function(){
                 description += imageLinks[k] + "\r\n\r\n";
             }
 
-            $.ajax({
-                type: "POST",
-                async: false,
-                url: "https://gitlab.com/api/v4/projects/"+projectId+"/issues",
-                // The key needs to match your method's input parameter (case-sensitive).
-                headers: {"PRIVATE-TOKEN": "jirUTEUKh9zj-U5HTwg7"},
-                data: {title: title, description: description},
-                // contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                
-                success: function(data){
-                    //add gitlab info
-                    // var thisItem = item[thisIssueId];
-                    thisIssue.gitlab = data;
-                    // console.log(thisItem);
-                    chrome.storage.local.set({[thisIssueId]: thisIssue}); 
-                    
-                    
-                    // waitingAjax.push(thisIssueId);
-                    // var index = waitingAjax.indexOf(thisIssueId);
-                    // if (index > -1) 
-                    //     waitingAjax.splice(index, 1);
-                    
-                    // if(waitingAjax.length == 0)
-                    //     $('#gitlab').prop('disabled', false);
 
-                },
-                failure: function(errMsg) {
-                    alert(errMsg);
-                }
-            });
+
+            if("gitlab" in thisIssue && thisIssue.modified){
+                //update issue
+
+                $.ajax({
+                    type: "PUT",
+                    async: false,
+                    url: "https://gitlab.com/api/v4/projects/"+projectId+"/issues/" + thisIssue.gitlab.iid,
+                    // The key needs to match your method's input parameter (case-sensitive).
+                    headers: {"PRIVATE-TOKEN": "jirUTEUKh9zj-U5HTwg7"},
+                    data: {title: title, description: description},
+                    // contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    
+                    success: function(data){
+                        //add gitlab info
+                        // var thisItem = item[thisIssueId];
+                        thisIssue.gitlab = data;
+                        thisIssue.modified = false;
+                        // console.log(thisItem);
+                        chrome.storage.local.set({[thisIssueId]: thisIssue}); 
+                        
+                        
+                        // waitingAjax.push(thisIssueId);
+                        // var index = waitingAjax.indexOf(thisIssueId);
+                        // if (index > -1) 
+                        //     waitingAjax.splice(index, 1);
+                        
+                        // if(waitingAjax.length == 0)
+                        //     $('#gitlab').prop('disabled', false);
+
+                    },
+                    failure: function(errMsg) {
+                        alert(errMsg);
+                    }
+                });
+            } else if(!("gitlab" in thisIssue)) {
+                //create issue
+                // var thisIssue = item[id];
+                
+
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "https://gitlab.com/api/v4/projects/"+projectId+"/issues",
+                    // The key needs to match your method's input parameter (case-sensitive).
+                    headers: {"PRIVATE-TOKEN": "jirUTEUKh9zj-U5HTwg7"},
+                    data: {title: title, description: description},
+                    // contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    
+                    success: function(data){
+                        //add gitlab info
+                        // var thisItem = item[thisIssueId];
+                        thisIssue.gitlab = data;
+                        // console.log(thisItem);
+                        chrome.storage.local.set({[thisIssueId]: thisIssue}); 
+                        
+                        
+                        // waitingAjax.push(thisIssueId);
+                        // var index = waitingAjax.indexOf(thisIssueId);
+                        // if (index > -1) 
+                        //     waitingAjax.splice(index, 1);
+                        
+                        // if(waitingAjax.length == 0)
+                        //     $('#gitlab').prop('disabled', false);
+
+                    },
+                    failure: function(errMsg) {
+                        alert(errMsg);
+                    }
+                });
+            }
+
+            
         }
 
         $('#gitlab').prop('disabled', false);
@@ -240,13 +261,30 @@ function loadIssues(status){
                 // console.log(thisIssue);
                 var gitlabSpan = document.createElement('span');
                 gitlabSpan.classList.add("gitlabSpan");
+                
+
+                if(thisIssue.modified){
+                    var needSyncIcon = document.createElement('i');
+                    needSyncIcon.classList.add("sync");
+                    needSyncIcon.classList.add("icon");
+                    needSyncIcon.classList.add("mr-1");
+
+                    gitlabSpan.appendChild(needSyncIcon);
+
+                }
                 var gitlabIcon = document.createElement('i');
                 gitlabIcon.classList.add("gitlab");
                 gitlabIcon.classList.add("icon");
+
+
                 var issueId = document.createElement('span');
                 issueId.innerHTML = "#" + thisIssue.gitlab.iid;
+
+
                 gitlabSpan.appendChild(gitlabIcon);
                 gitlabSpan.appendChild(issueId);
+
+
 
                 header.appendChild(gitlabSpan);
             }
