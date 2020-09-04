@@ -14,13 +14,16 @@ var popupCenter = ({url, title, w, h}) => {
     const systemZoom = width / window.screen.availWidth;
     const left = (width - w) / 2 / systemZoom + dualScreenLeft
     const top = (height - h) / 2 / systemZoom + dualScreenTop
-    const newWindow = window.open(url, title, 
+    const newWindow = window.open(url, '_blank', 
       `
       scrollbars=yes,
       width=${w / systemZoom}, 
       height=${h / systemZoom}, 
       top=${top}, 
-      left=${left}
+      left=${left},
+      menubar=0,
+      toolbar=0,
+      location=0
       `
     )
 
