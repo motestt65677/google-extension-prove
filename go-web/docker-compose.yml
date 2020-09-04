@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+
+  go-web:
+    container_name: go-web
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    hostname: go-web
+    ports:
+      - "8888:80"
+    restart: always
+    command: [ "-p" ]
+    volumes: 
+        - .:/var/www/html/work
+
