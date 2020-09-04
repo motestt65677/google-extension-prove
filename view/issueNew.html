@@ -54,6 +54,26 @@
 
   }
 
+  .screen-shot{
+    margin: 10px;
+  }
+  .input-width{
+    width: 80% !important;
+  }
+  .label{
+    text-align:right;
+    font-weight: bold;
+  }
+  .v-align-middle{
+    margin: auto 0 !important;
+  }
+  .gap{
+    width:3%;
+  }
+  .row-height{
+    min-height: 3em;
+  }
+
 </style>
 <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
 <link rel="stylesheet" href="/css/semantic.min.css" >
@@ -83,9 +103,112 @@
         <div class="ui section divider"></div>
         <!-- <div id="imageList" style="display: inline-block;">
         </div> -->
-        
+        <div id="editContainer" class="ui form">
+          <div id="titleEditContainer" class="fields row-height" >
+            <label class="two wide field label v-align-middle" >Title</label>
+            <div class="gap"></div>
+            <input type="text" class="field form-control input-width" id="title">
+          </div>
+          <div id="priorityEditContainer" class="fields row-height">
+            <label class="two wide field v-align-middle label v-align-middle" style="text-align:right;">Priority</label>
+            <div class="gap"></div>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox v-align-middle">
+                <input type="radio" name="priority" checked="" tabindex="0" class="hidden" value="low">
+                <label>Low</label>
+              </div>
+            </div>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="priority" tabindex="0" class="hidden" value="medium">
+                <label>Medium</label>
+              </div>
+            </div>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="priority" tabindex="0" class="hidden" value="high">
+                <label>High</label>
+              </div>
+            </div>
+          </div>
 
-        <div class="ui form">
+          <div id="browserEditContainer" class="fields row-height">
+            <label class="two wide field v-align-middle label v-align-middle" style="text-align:right;">Browser </label>
+            <div class="gap"></div>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" checked="" tabindex="0" class="hidden" value="chrome">
+                <label>Chrome</label>
+              </div>
+            </div>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" tabindex="0" class="hidden" value="firefox">
+                <label>Firefox</label>
+              </div>
+            </div>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" tabindex="0" class="hidden" value="safari">
+                <label>Safari</label>
+              </div>
+            </div>
+            <div class="field v-align-middle">
+              <div class="ui radio checkbox">
+                <input type="radio" name="browser" tabindex="0" class="hidden" value="edge">
+                <label>Edge</label>
+              </div>
+            </div>
+          </div>
+
+          <div id="urlEditContainer" class="fields row-height" >
+            <label class="two wide field label v-align-middle" >Url</label>
+            <div class="gap"></div>
+            <input type="text" class="field form-control input-width" id="url">
+          </div>
+
+          <div id="expectedResultEditContainer" class="fields row-height">
+            <label class="two wide field label v-align-middle">Expected Result</label>
+            <div class="gap"></div>
+            <input type="text" class="field form-control input-width" id="expected_result">
+          </div>
+
+          <div id="actualResultEditContainer" class="fields row-height">
+            <label class="two wide field label v-align-middle">Actual Result</label>
+            <div class="gap"></div>
+            <input type="text" class="field form-control input-width" id="actual_result">
+          </div>
+
+          <div id="stepsEditContainer" class="fields row-height">
+            <label class="two wide field label">Steps To Reproduce</label>
+            <div class="gap"></div>
+            <textarea type="text" class="field form-control input-width" id="steps"></textarea>
+          </div>
+
+          <div id="descriptionEditContainer" class="fields row-height">
+            <label class="two wide field label">Descriptions</label>
+            <div class="gap"></div>
+            <textarea type="text" class="field form-control input-width" id="description"></textarea>
+          </div>
+          <div id="screenshotEditContainer" class="fields row-height">
+            <label class="two wide field label">Screen Shots</label>
+            <div class="gap"></div>
+            
+          </div>
+          <div>
+            <div id="imageList" class="ui horizontal list" style="min-height: 100px; min-width: 150px; border: 1px dashed black; margin: 10px; vertical-align: middle; padding: 8px 12px 8px 12px;">
+            </div>
+            <button id="addImage"  style="display:inline-block; width: 30px; height: 30px; margin: auto; ">+</button>
+  
+          </div>
+          <div class="ui secondary grey segment" style="margin-bottom: 2em;">
+            <button id="saveIssue" class="ui button" type="submit">Submit issue</button>
+            <a class="ui right floated button" type="submit" href="/view/issueList.html">Cancel</a>
+
+          </div>
+        </div>
+
+        <!-- <div class="ui form">
           
           <div class="field">
             <label>Title</label>
@@ -177,7 +300,7 @@
             <a class="ui right floated button" type="submit" href="/view/issueList.html">Cancel</a>
 
           </div>
-        </div>
+        </div> -->
         
         
 
