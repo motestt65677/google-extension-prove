@@ -6,7 +6,7 @@
 
 
 
-##go web
+## Go web
 - for uploading image to gitlab, use go-web to start a web app.
 - to run go web ```go run main.go```
 
