@@ -2,7 +2,7 @@
 ## How to start
 - open chrome and type in this url to access extension page ```chrome://extensions/```
 - turn on developer's mode and load this project
-- you should see ![app icon](/images/get_started16.png "title") on the top left corner of chrome toolbar
+- you should see ![app icon](/images/print_c_16.png "title") on the top left corner of chrome toolbar
 
 
 
