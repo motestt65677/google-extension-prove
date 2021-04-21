@@ -1,5 +1,6 @@
 <html>
 <head>
+  <meta charset="utf-8">
 <style>
   body {
     background: white;
@@ -74,259 +75,18 @@
     min-height: 3em;
   }
 
+  .ck-editor__editable_inline {
+    min-height: 100%;
+  }
+
 </style>
 <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
 <link rel="stylesheet" href="/css/semantic.min.css" >
 
 </head>
 <body>
-  <div id="lowerLevel" style="z-index: 0; position: absolute; top: 0; left: 0; background-color: black;">
-    <video autoplay style="position: absolute; width: 100%; height:100%;" ></video>
-  </div>
-  <div id="upperLevel" >
-    <div id="issueImageContainer" style="display:none;">
-      <div id="convasCrop" style="display:inline-block;">
-        <img id="editingImage" >
-        <p style="color:white; position: absolute; font-size: 30px; top: 50px; left: 50px;">aaaa</p>
-      </div>
-      <button id="doneEditImage">Done editing image</button>
-    </div>
-
-    <div id="editIssueContainer">
-      
-      <!-- <div id="convasContainer" style="text-align: center; width: 500px; height: 500px;">
-      </div> -->
-      
-      
-      <div class="container ui" style="margin-top: 30px;">
-        <h3 class="ui header">New Issue</h3>
-        <div class="ui section divider"></div>
-        <!-- <div id="imageList" style="display: inline-block;">
-        </div> -->
-        <div id="editContainer" class="ui form">
-          <div id="titleEditContainer" class="fields row-height" >
-            <label class="two wide field label v-align-middle" >Title</label>
-            <div class="gap"></div>
-            <input type="text" class="field form-control input-width" id="title">
-          </div>
-          <div id="priorityEditContainer" class="fields row-height">
-            <label class="two wide field v-align-middle label v-align-middle" style="text-align:right;">Priority</label>
-            <div class="gap"></div>
-            <div class="field v-align-middle">
-              <div class="ui radio checkbox v-align-middle">
-                <input type="radio" name="priority" checked="" tabindex="0" class="hidden" value="low">
-                <label>Low</label>
-              </div>
-            </div>
-            <div class="field v-align-middle">
-              <div class="ui radio checkbox">
-                <input type="radio" name="priority" tabindex="0" class="hidden" value="medium">
-                <label>Medium</label>
-              </div>
-            </div>
-            <div class="field v-align-middle">
-              <div class="ui radio checkbox">
-                <input type="radio" name="priority" tabindex="0" class="hidden" value="high">
-                <label>High</label>
-              </div>
-            </div>
-          </div>
-
-          <div id="browserEditContainer" class="fields row-height">
-            <label class="two wide field v-align-middle label v-align-middle" style="text-align:right;">Browser </label>
-            <div class="gap"></div>
-            <div class="field v-align-middle">
-              <div class="ui radio checkbox">
-                <input type="radio" name="browser" checked="" tabindex="0" class="hidden" value="chrome">
-                <label>Chrome</label>
-              </div>
-            </div>
-            <div class="field v-align-middle">
-              <div class="ui radio checkbox">
-                <input type="radio" name="browser" tabindex="0" class="hidden" value="firefox">
-                <label>Firefox</label>
-              </div>
-            </div>
-            <div class="field v-align-middle">
-              <div class="ui radio checkbox">
-                <input type="radio" name="browser" tabindex="0" class="hidden" value="safari">
-                <label>Safari</label>
-              </div>
-            </div>
-            <div class="field v-align-middle">
-              <div class="ui radio checkbox">
-                <input type="radio" name="browser" tabindex="0" class="hidden" value="edge">
-                <label>Edge</label>
-              </div>
-            </div>
-          </div>
-
-          <div id="urlEditContainer" class="fields row-height" >
-            <label class="two wide field label v-align-middle" >Url</label>
-            <div class="gap"></div>
-            <input type="text" class="field form-control input-width" id="url">
-          </div>
-
-          <div id="expectedResultEditContainer" class="fields row-height">
-            <label class="two wide field label v-align-middle">Expected Result</label>
-            <div class="gap"></div>
-            <input type="text" class="field form-control input-width" id="expected_result">
-          </div>
-
-          <div id="actualResultEditContainer" class="fields row-height">
-            <label class="two wide field label v-align-middle">Actual Result</label>
-            <div class="gap"></div>
-            <input type="text" class="field form-control input-width" id="actual_result">
-          </div>
-
-          <div id="stepsEditContainer" class="fields row-height">
-            <label class="two wide field label">Steps To Reproduce</label>
-            <div class="gap"></div>
-            <textarea type="text" class="field form-control input-width" id="steps"></textarea>
-          </div>
-
-          <div id="descriptionEditContainer" class="fields row-height">
-            <label class="two wide field label">Descriptions</label>
-            <div class="gap"></div>
-            <textarea type="text" class="field form-control input-width" id="description"></textarea>
-          </div>
-          <div id="screenshotEditContainer" class="fields row-height">
-            <label class="two wide field label">Screen Shots</label>
-            <div class="gap"></div>
-            
-          </div>
-          <div>
-            <div id="imageList" class="ui horizontal list" style="min-height: 100px; min-width: 150px; border: 1px dashed black; margin: 10px; vertical-align: middle; padding: 8px 12px 8px 12px;">
-            </div>
-            <button id="addImage"  style="display:inline-block; width: 30px; height: 30px; margin: auto; ">+</button>
+  <div id="editor" name="editorDemo" class="form-control" style="height:10rem;">
   
-          </div>
-          <div class="ui secondary grey segment" style="margin-bottom: 2em;">
-            <button id="saveIssue" class="ui button" type="submit">Submit issue</button>
-            <a class="ui right floated button" type="submit" href="/view/issueList.html">Cancel</a>
-
-          </div>
-        </div>
-
-        <!-- <div class="ui form">
-          
-          <div class="field">
-            <label>Title</label>
-            <input type="text" class="form-control" id="title">
-          </div>
-          
-          <div class="inline fields">
-            <label for="fruit">Priority</label>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="priority" checked="" tabindex="0" class="hidden" value="low">
-                <label>Low</label>
-              </div>
-            </div>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="priority" tabindex="0" class="hidden" value="medium">
-                <label>Medium</label>
-              </div>
-            </div>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="priority" tabindex="0" class="hidden" value="high">
-                <label>High</label>
-              </div>
-            </div>
-          </div>
-          <div class="inline fields">
-            <label for="fruit">Browser</label>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="browser" checked="" tabindex="0" class="hidden" value="chrome">
-                <label>Chrome</label>
-              </div>
-            </div>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="browser" tabindex="0" class="hidden" value="firefox">
-                <label>Firefox</label>
-              </div>
-            </div>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="browser" tabindex="0" class="hidden" value="safari">
-                <label>Safari</label>
-              </div>
-            </div>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="browser" tabindex="0" class="hidden" value="edge">
-                <label>Edge</label>
-              </div>
-            </div>
-          </div>
-          <div class="field">
-            <label>Url</label>
-            <input type="text" class="form-control" id="url">
-          </div>
-          <div class="field">
-            <label>Expected result</label>
-            <input type="text" class="form-control" id="expected_result">
-          </div>
-          <div class="field">
-            <label>Actual result</label>
-            <input type="text" class="form-control" id="actual_result">
-          </div>
-          <div class="field">
-            <label>Steps to reproduce</label>
-            <textarea type="text" class="form-control" id="steps"></textarea>
-          </div>
-          
-          
-          <div class="field">
-            <label>Description</label>
-            <textarea type="text" class="form-control" id="description"></textarea>
-          </div>
-
-          <div class="field">
-            <label>Screen Shots</label>
-            <div>
-              <div id="imageList" class="ui horizontal list" style="min-height: 100px; min-width: 150px; border: 1px dashed black; margin: 10px; vertical-align: middle; padding: 8px 12px 8px 12px;">
-              </div>
-              <button id="addImage"  style="display:inline-block; width: 30px; height: 30px; margin: auto; ">+</button>
-    
-            </div>
-          </div>
-          <div class="ui secondary grey segment">
-            <button id="saveIssue" class="ui button" type="submit">Submit issue</button>
-            <a class="ui right floated button" type="submit" href="/view/issueList.html">Cancel</a>
-
-          </div>
-        </div> -->
-        
-        
-
-        <!-- <div>
-          <span>Expected result</span>
-          <input type="text">
-        </div>
-        <div>
-          <span>Actual result</span>
-          <input type="text">
-        </div>
-        <div>
-          <span>Priority</span>
-          <input type="text">
-        </div>
-        <div>
-          <span>Url</span>
-          <input type="text">
-        </div>
-        <div>
-          <span>Description</span>
-          <input type="text">
-        </div> -->
-      </div>
-    </div>
-  </div>
   <!-- <div style="position: absolute; bottom:0; left:50%; z-index: 2;">
     <button id="new">New Issue</button>
     <button id="next">Next</button>
@@ -335,15 +95,34 @@
 
     <button id="list">Issue List</button>
   </div> -->
-<script src="/javascript/html2canvas.min.js"></script>
-<script src="/javascript/jquery-3.5.1.js"></script>
-<!-- <script src="popper.min.js"></script> -->
-<!-- <script src="bootstrap.min.js"></script> -->
-<script src="/javascript/semantic.min.js"></script>
 
-<script src="/javascript/tools.js"></script>
-<script src="/javascript/templates.js"></script>
-<script src="/view_javascript/issueNew.js"></script>
+  
+
+
+
+
+  <script src="/javascript/html2canvas.min.js"></script>
+  <script src="/javascript/jquery-3.5.1.js"></script>
+  <!-- <script src="popper.min.js"></script> -->
+  <!-- <script src="bootstrap.min.js"></script> -->
+  <script src="/javascript/semantic.min.js"></script>
+
+
+  <!-- <script src="/ckeditor5/build/ckeditor.js"></script> -->
+  <script src="/ckeditor5/packages/ckeditor5-build-classic/build/ckeditor.js"></script>
+  <script src="/ckeditor5/packages/ckeditor5-build-classic/build/translations/zh.js"></script>
+  <!-- <script src="/ckeditor5/build/translations/en.js"></script>
+  <script src="/ckeditor5/build/translations/zh-cn.js"></script>
+  <script src="/ckeditor5/build/translations/ja.js"></script>
+  <script src="/ckeditor5/build/translations/fr.js"></script>
+  <script src="/ckeditor5/build/translations/es.js"></script> -->
+
+  
+  <script src="/javascript/tools.js"></script>
+  <script src="/javascript/templates.js"></script>
+  <script src="/view_javascript/issueNew.js"></script>
+
+
 
 </body>
 </html>
