@@ -162,11 +162,21 @@ function startCrop(){
         
         var item = document.createElement('div');
         item.classList.add("item");
-        var url = canvas.toDataURL("image/png");
-        var item = getPreviewImageItem(url);
-        var imageList = window.opener.document.querySelector('#imageList');
-        imageList.appendChild(item);
-        window.opener.editingImages.push(url);
+        var imageUrl = canvas.toDataURL("image/png");
+        // var item = getPreviewImageItem(url);
+
+        var editor = window.opener.mainEditor;
+        editor.model.change( writer => {
+            const imageElement = writer.createElement( 'image', {
+                src: imageUrl
+            } );
+
+            // Insert the image in the current selection location.
+            editor.model.insertContent( imageElement, editor.model.document.selection );
+        } );
+        // var imageList = window.opener.document.querySelector('#imageList');
+        // imageList.appendChild(item);
+        // window.opener.editingImages.push(url);
         window.close();
     });
 }

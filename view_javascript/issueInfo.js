@@ -5,35 +5,23 @@ var saveIssueBtn = document.getElementById('saveIssue');
 
 var urlParams = new URLSearchParams(window.location.search);
 var id = urlParams.get('id');
+var obj = {};
 var mode = "info";
 
 var desktop_sharing = false;
 var local_stream = null;
 var status = "home"; //home, screen shot, edit image, edit issue
 var editingImages = [];
-
 $('.ui.radio.checkbox')
   .checkbox()
 ;
 
 window.addEventListener("load", function(){
-
-    // console.log(id)
-    
-    
-    loadInfo();
-    $('.ui.radio.checkbox').checkbox();
-
-    //load editing images from storage
-    chrome.storage.local.get('issues', function (item) {
-        var issues = item['issues'];
-        var thisItem = issues[id];
-        editingImages = thisItem["images"];
-        console.log(thisItem.status);
-        if(thisItem.status == "open"){
+    loadInfo(function(){
+        if(obj[id]["status"] == "open"){
             $("#reopenIssue").hide();
             $("#closeIssue").show();
-        } else if(thisItem.status == "closed"){
+        } else if(obj[id]["status"] == "closed"){
             $("#reopenIssue").show();
             $("#closeIssue").hide();
         }
@@ -41,38 +29,22 @@ window.addEventListener("load", function(){
 });
 
 closeIssueBtn.addEventListener('click', function(){
-    chrome.storage.local.get('issues', function (item) {
-        var issues = item['issues'];
-        var thisItem = issues[id];
-        thisItem.status = "closed";
-        issues[id] = thisItem;
-        chrome.storage.local.set({'issues': issues}, function(){
-            //window.location.href = "/view/issueList.html";
-            
-            $("#reopenIssue").show();
-            $("#closeIssue").hide();
-        }); 
-    });
-
+    obj[id].status = "closed";
+    chrome.storage.local.set(obj, function(){
+        $("#reopenIssue").show();
+        $("#closeIssue").hide();
+    }); 
 });
 
 reopenIssueBtn.addEventListener('click', function(){
-    chrome.storage.local.get('issues', function (item) {
-        var issues = item['issues'];
-        var thisItem = issues[id];
-        thisItem.status = "open";
-        issues[id] = thisItem;
-        chrome.storage.local.set({'issues': issues}, function(){
-            //window.location.href = "/view/issueList.html";
-            $("#closeIssue").show();
-            $("#reopenIssue").hide();
-            
-        }); 
-    });
+    obj[id].status = "open";
+    chrome.storage.local.set(obj, function(){
+        $("#closeIssue").show();
+        $("#reopenIssue").hide();
+    }); 
 });
 
 editIssueBtn.addEventListener('click', function(){
-    // window.location.href = "/view/issueEdit.html?id=" + id;
     mode = "edit";
     $("#infoContainer").hide();
     $("#editContainer").show();
@@ -81,110 +53,50 @@ editIssueBtn.addEventListener('click', function(){
     loadEdit();
 });
 saveIssueBtn.addEventListener('click', function(){
-    // window.location.href = "/view/issueEdit.html?id=" + id;
     mode = "info";
     $("#editContainer").hide();
     $("#infoContainer").show();
     $("#saveIssue").hide();
     $("#editIssue").show();
-    loadInfo();
+    var content = window.mainEditor.getData();
+    obj[id]["content"] = content;
 
-    var priority = $("input[name='priority']:checked").val();
-    var browser = $("input[name='browser']:checked").val();
-    var url = document.getElementById('url_edit').value;
-    var expected_result = document.getElementById('expected_result_edit').value;
-    var actual_result = document.getElementById('actual_result_edit').value;
-    var steps = document.getElementById('steps_edit').value;
-    var description = document.getElementById('description_edit').value;
+    if("gitlab" in obj[id])
+        obj[id]["modified"] = true;
 
-    chrome.storage.local.get('issues', function (items) {
-        var issues = items["issues"];
-        var thisItem= issues[id];
-        thisItem.images = editingImages;
-        thisItem.priority = priority;
-        thisItem.browser = browser;
-        thisItem.url = url;
-        thisItem.expected_result = expected_result;
-        thisItem.actual_result = actual_result;
-        thisItem.steps = steps;
-        thisItem.description = description;
-        if("gitlab" in thisItem)
-            thisItem.modified = true;
-
-        issues[id] = thisItem;
-        chrome.storage.local.set({'issues': issues}, function(){
-            //    window.location.href = "/view/issueList.html";
-            loadInfo();
-        }); 
-    });
-
-       // issues.push(obj);
-       // set the new array value to the same key
-
-   
-
+    chrome.storage.local.set(obj, function(){
+        loadInfo();
+    }); 
 });
 
-document.querySelector('#addImage').addEventListener('click', function(e) {
-    toggle();
-});
-
-function loadInfo(){
-    chrome.storage.local.get('issues', function (item) {
-        var issues = item["issues"];
-        var thisItem= issues[id];
-        document.getElementById('title').innerHTML = thisItem.title;
-        document.getElementById('priority').innerHTML = thisItem.priority;
-        document.getElementById('browser').innerHTML = thisItem.browser;
-        document.getElementById('url').innerHTML = thisItem.url;
-        document.getElementById('expected_result').innerHTML = thisItem.expected_result;
-        document.getElementById('actual_result').innerHTML = thisItem.actual_result;
-        document.getElementById('steps').innerHTML = thisItem.steps;
-        document.getElementById('description').innerHTML = thisItem.description;
-
-        var images = thisItem.images;
-        var imageListInfo = document.getElementById('imageListInfo');
-        imageListInfo.innerHTML = "";
-        for(var i = 0; i < images.length; i++){
-            var thisImage = getOriginImage(images[i]);
-            imageListInfo.appendChild(thisImage);
+function loadInfo(callback = null){
+    chrome.storage.local.get(id, function (item) {
+        obj[id] = item[id];
+        document.getElementById('title').innerHTML = obj[id].title;
+        document.getElementById('content').innerHTML = obj[id].content;
+        if(callback != null){
+            callback();
         }
-
-        
-        // console.log(thisItem.status);
-        
-
     });
 }
 
 function loadEdit(){
-    chrome.storage.local.get('issues', function (item) {
-        var issues = item['issues'];
-        var thisItem= issues[id];
-        // document.getElementById('priority_edit').value = thisItem.priority;
-        // document.getElementById('browser_edit').value = thisItem.browser;
-        $("input[name=priority][value='"+thisItem.priority+"']").prop("checked",true);
-        $("input[name=browser][value='"+thisItem.browser+"']").prop("checked",true);
-
-        document.getElementById('url_edit').value = thisItem.url;
-        document.getElementById('expected_result_edit').value = thisItem.expected_result;
-        document.getElementById('actual_result_edit').value = thisItem.actual_result;
-        document.getElementById('steps_edit').value = thisItem.steps;
-        document.getElementById('description_edit').value = thisItem.description;
-
-        var images = thisItem.images;
-        var imageList = document.getElementById('imageList');
-        imageList.innerHTML = "";
-        for(var i = 0; i < images.length; i++){
-            var editImage = getPreviewImageItem(images[i]);
-            imageList.appendChild(editImage);
-        }
-
-        
-        // console.log(thisItem.status);
-        
-    });
-    
+    if (typeof(window.mainEditor) == "undefined"){
+        ClassicEditor
+        .create( document.querySelector( '#editor' ), {
+            language: 'zh'
+        } )
+        .then( editor => {
+            window.mainEditor = editor;
+            const content = obj[id]["content"];
+            const viewFragment = editor.data.processor.toView( content );
+            const modelFragment = editor.data.toModel( viewFragment );
+            editor.model.insertContent( modelFragment );
+        } )
+        .catch( error => {
+            console.error( error );
+        } );
+    }
 }
 
 
@@ -194,13 +106,11 @@ function toggle() {
         chrome.desktopCapture.chooseDesktopMedia(["window"], onAccessApproved);
     } 
 }
+
 function showEditIssue(){
     document.getElementById('issueImageContainer').style.display = 'none';
     document.getElementById('editIssueContainer').style.display = 'block';
 }
-
-
-
 
 function onAccessApproved(desktop_id) {
     if (!desktop_id) {

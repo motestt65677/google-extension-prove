@@ -1,114 +1,115 @@
 <html>
 <head>
   <meta charset="utf-8">
-<style>
-  body {
-    background: white;
-    /* display: -webkit-flex; */
-    /* -webkit-justify-content: center; */
-    /* -webkit-align-items: center; */
-    /* -webkit-flex-direction: column; */
-  }
-  video {
-    background: rgba(0,0,0,0.25);
-  }
-  button {
-    display: inline-block;
-    background: -webkit-linear-gradient(#F9F9F9 40%, #E3E3E3 70%);
-    background: linear-gradient(#F9F9F9 40%, #E3E3E3 70%);
-    border: 1px solid #999;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    padding: 5px 8px;
-    outline: none;
-    white-space: nowrap;
-    -webkit-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    text-shadow: 1px 1px #fff;
-    font-weight: 700;
-    font-size: 10pt;
-  }
-  button:hover,
-  button.active {
-    border-color: black;
-  }
-  button:active,
-  button.active {
-    background: -webkit-linear-gradient(#E3E3E3 40%, #F9F9F9 70%);
-    background: linear-gradient(#E3E3E3 40%, #F9F9F9 70%);
-  }
+  <style>
+    body {
+      background: white;
+      /* display: -webkit-flex; */
+      /* -webkit-justify-content: center; */
+      /* -webkit-align-items: center; */
+      /* -webkit-flex-direction: column; */
+    }
+    video {
+      background: rgba(0,0,0,0.25);
+    }
+    button {
+      display: inline-block;
+      background: -webkit-linear-gradient(#F9F9F9 40%, #E3E3E3 70%);
+      background: linear-gradient(#F9F9F9 40%, #E3E3E3 70%);
+      border: 1px solid #999;
+      -webkit-border-radius: 3px;
+      border-radius: 3px;
+      padding: 5px 8px;
+      outline: none;
+      white-space: nowrap;
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: pointer;
+      text-shadow: 1px 1px #fff;
+      font-weight: 700;
+      font-size: 10pt;
+    }
+    button:hover,
+    button.active {
+      border-color: black;
+    }
+    button:active,
+    button.active {
+      background: -webkit-linear-gradient(#E3E3E3 40%, #F9F9F9 70%);
+      background: linear-gradient(#E3E3E3 40%, #F9F9F9 70%);
+    }
 
-  video {
-    background: white center no-repeat;
-    border: 1px solid #e2e2e2;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.2);
-  }
-  #upperLevel{
-    z-index: 1; 
-    background-color: white; 
-    position: absolute; 
-    top: 0; 
-    left: 0;
-    width: 100%;
-    height: 100%;
+    video {
+      background: white center no-repeat;
+      border: 1px solid #e2e2e2;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    }
+    #upperLevel{
+      z-index: 1; 
+      background-color: white; 
+      position: absolute; 
+      top: 0; 
+      left: 0;
+      width: 100%;
+      height: 100%;
 
-  }
+    }
 
-  .screen-shot{
-    margin: 10px;
-  }
-  .input-width{
-    width: 80% !important;
-  }
-  .label{
-    text-align:right;
-    font-weight: bold;
-  }
-  .v-align-middle{
-    margin: auto 0 !important;
-  }
-  .gap{
-    width:3%;
-  }
-  .row-height{
-    min-height: 3em;
-  }
-
-  .ck-editor__editable_inline {
-    min-height: 100%;
-  }
-
-</style>
-<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
-<link rel="stylesheet" href="/css/semantic.min.css" >
-
+    .screen-shot{
+      margin: 10px;
+    }
+    .input-width{
+      width: 80% !important;
+    }
+    .label{
+      text-align:right;
+      font-weight: bold;
+    }
+    .v-align-middle{
+      margin: auto 0 !important;
+    }
+    .gap{
+      width:3%;
+    }
+    .row-height{
+      min-height: 3em;
+    }
+    .ck-editor__editable_inline {
+      min-height: 80vh;
+    }
+  </style>
+  <link rel="stylesheet" href="/css/semantic.min.css" >
 </head>
 <body>
-  <div id="editor" name="editorDemo" class="form-control" style="height:10rem;">
-  
-  <!-- <div style="position: absolute; bottom:0; left:50%; z-index: 2;">
-    <button id="new">New Issue</button>
-    <button id="next">Next</button>
-    <button id="done">Done</button>
-    
+  <div class="" style="margin-top: 30px;">
+    <div class="container ui" style="margin-top: 30px;">
+      <div id="editContainer" class="ui form">
+        <div id="descriptionEditContainer" class="fields row-height">
+          <div class="sixteen wide field">
+            <!-- <label>Title</label> -->
+            <input type="text" class="form-control" id="title" placeholder="Title" >
+          </div>
+        </div>
+        <div class="fields row-height">
+          <div class="sixteen wide field">
+            <div id="editor" name="editorDemo" class="form-control" style="height:10rem;"></div>
+          </div>
+        </div>
+      </div>
 
-    <button id="list">Issue List</button>
-  </div> -->
+      <div class="ui secondary grey segment" style="margin:0;">
+        <button id="saveIssue" class="ui button" type="submit">Submit issue</button>
+        <a class="ui right floated button" type="submit" href="/view/issueList.html">Cancel</a>
+      </div>
+    </div>
 
-  
-
-
-
-
+    <div id="lowerLevel" style="z-index: 0; position: absolute; top: 0; left: 0; background-color: black;">
+      <video autoplay style="position: absolute; width: 100%; height:100%;" ></video>
+    </div>
+  </div>
   <script src="/javascript/html2canvas.min.js"></script>
   <script src="/javascript/jquery-3.5.1.js"></script>
-  <!-- <script src="popper.min.js"></script> -->
-  <!-- <script src="bootstrap.min.js"></script> -->
   <script src="/javascript/semantic.min.js"></script>
-
-
-  <!-- <script src="/ckeditor5/build/ckeditor.js"></script> -->
   <script src="/ckeditor5/packages/ckeditor5-build-classic/build/ckeditor.js"></script>
   <script src="/ckeditor5/packages/ckeditor5-build-classic/build/translations/zh.js"></script>
   <!-- <script src="/ckeditor5/build/translations/en.js"></script>
@@ -116,13 +117,12 @@
   <script src="/ckeditor5/build/translations/ja.js"></script>
   <script src="/ckeditor5/build/translations/fr.js"></script>
   <script src="/ckeditor5/build/translations/es.js"></script> -->
-
-  
   <script src="/javascript/tools.js"></script>
   <script src="/javascript/templates.js"></script>
   <script src="/view_javascript/issueNew.js"></script>
-
-
-
 </body>
 </html>
+
+
+
+
