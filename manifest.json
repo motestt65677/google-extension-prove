@@ -2,7 +2,7 @@
     "name": "Prove",
     "version": "2",
     "description": "Manage project issues",
-    "permissions": ["storage", "unlimitedStorage", "desktopCapture", "https://gitlab.com/*", "http://localhost:9990/*"],
+    "permissions": ["storage", "unlimitedStorage", "desktopCapture", "https://gitlab.com/*", "http://localhost:9990/*", "https://api.imgur.com/*"],
     "background": {
       "scripts": ["background.js"],
       "persistent": false

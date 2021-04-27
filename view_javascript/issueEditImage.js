@@ -164,22 +164,49 @@ function startCrop(){
         item.classList.add("item");
         var imageUrl = canvas.toDataURL("image/png");
         // var item = getPreviewImageItem(url);
+        var data = imageUrl.split(',')[1];
 
-        var editor = window.opener.mainEditor;
-        editor.model.change( writer => {
-            const imageElement = writer.createElement( 'image', {
-                src: imageUrl
+        var form = new FormData();
+        form.append("image", data);
+    
+        var settings = {
+            "url": "https://api.imgur.com/3/image",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Client-ID {{clientId}}"
+            },
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+            "data": form
+            // "async": false
+        };
+    
+        $.ajax(settings).done(function (response) {
+            console.log(typeof(response));
+            responseJson = JSON.parse(response);
+            if(responseJson["status"] != "200")
+                return false;
+
+            var editor = window.opener.mainEditor;
+            editor.model.change( writer => {
+                const imageElement = writer.createElement( 'image', {
+                    src: responseJson["data"]["link"]
+                } );
+
+                // Insert the image in the current selection location.
+                editor.model.insertContent( imageElement, editor.model.document.selection );
             } );
-
-            // Insert the image in the current selection location.
-            editor.model.insertContent( imageElement, editor.model.document.selection );
-        } );
-        // var imageList = window.opener.document.querySelector('#imageList');
-        // imageList.appendChild(item);
-        // window.opener.editingImages.push(url);
-        window.close();
+            window.close();
+        });
     });
 }
+
+function ID() {
+    var date = new Date();
+    return '_' + date.getTime();
+};
 
 function setUpDraw(){
 

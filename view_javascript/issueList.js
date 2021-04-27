@@ -59,123 +59,95 @@ $('#gitlab').click(function(){
     var privateToken = projectInfo["privateToken"];
 
     // var waitingAjax = [];
+    chrome.storage.local.get(null, function (items) {
+        for (var key in items) {
+            if (items.hasOwnProperty(key)) {      
+                if(key.startsWith("_")){
+                    var thisIssue = items[key];
+                    var thisStatus = thisIssue.status;
+                    // var imageLinks = [];
+        
+                    if(thisStatus != "open")
+                        continue;
+        
+                    if("gitlab" in thisIssue && !thisIssue.modified)
+                        continue;
+        
+                   
+        
+                    var title = thisIssue["title"];
+                    var description = thisIssue["content"];
+
+
+        
+                    if("gitlab" in thisIssue && thisIssue.modified){
+                        //update issue
+        
+                        $.ajax({
+                            type: "PUT",
+                            async: false,
+                            url: "https://gitlab.com/api/v4/projects/"+projectId+"/issues/" + thisIssue.gitlab.iid,
+                            // The key needs to match your method's input parameter (case-sensitive).
+                            headers: {"PRIVATE-TOKEN": "jirUTEUKh9zj-U5HTwg7"},
+                            data: {title: title, description: description},
+                            // contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            
+                            success: function(data){
+                                //add gitlab info
+                                thisIssue.gitlab = data;
+                                thisIssue.modified = false;
+                                // console.log(thisItem);
+                                // issues[thisIssue.id] = thisIssue;
+                                var obj = {};
+                                obj[key] = thisIssue;
+                                chrome.storage.local.set(obj); 
+                            },
+                            failure: function(errMsg) {
+                                console.log(errMsg);
+                                alert(errMsg);
+                            }
+                        });
+                    } else if(!("gitlab" in thisIssue)) {
+                        //create issue
+                        // var thisIssue = item[id];
+                        
+        
+                        $.ajax({
+                            type: "POST",
+                            async: false,
+                            url: "https://gitlab.com/api/v4/projects/"+projectId+"/issues",
+                            // The key needs to match your method's input parameter (case-sensitive).
+                            headers: {"PRIVATE-TOKEN": "jirUTEUKh9zj-U5HTwg7"},
+                            data: {title: title, description: thisIssue["content"]},
+                            // contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            
+                            success: function(data){
+                                //add gitlab info
+                                thisIssue.gitlab = data;
+                                var obj = {};
+                                obj[key] = thisIssue;
+                                chrome.storage.local.set(obj); 
+                            },
+                            failure: function(errMsg) {
+                                console.log(errMsg);
+                                alert(errMsg);
+                            }
+                        });
+                    }
+                }     
+            }
+        }
+    });
+
     chrome.storage.local.get('issues', function (items) {
-        // the input argument is ALWAYS an object containing the queried keys
-        // so we select the key we need
         var issues = items["issues"];
         var allKeys = Object.keys(issues);
 
         for(var i = 0; i< allKeys.length; i++){
             var thisIssue = issues[allKeys[i]];
-            var thisStatus = thisIssue.status;
-            // var imageLinks = [];
-
-            if(thisStatus != "open")
-                continue;
-
-            if("gitlab" in thisIssue && !thisIssue.modified)
-                continue;
-
-            // //prepare upload data
-            // var images = thisIssue["images"];
-            // for(var j = 0; j < images.length; j++){
-            //     var imageBase64 = thisIssue["images"][j].replace("data:image/png;base64,","");
-            //     var fileName = guidGenerator() + '.png';
-
-            //     var blob = base64ToBlob(imageBase64, 'image/png');                
-            //     var formData = new FormData();
-            //     formData.append('image', blob);
-            //     formData.append('privateToken', privateToken);
-            //     formData.append('projectId', projectId);
-            //     formData.append('fileName', fileName);
-            //     formData.append('imageOrder', j);
-                
-            //     $.ajax({
-            //         url: url, 
-            //         type: "POST", 
-            //         cache: false,
-            //         contentType: false,
-            //         processData: false,
-            //         data: formData,
-            //         async: false,
-            //         success: function(result) {
-            //             imageLinks.push(result["markdown"]);
-            //         },
-                
-            //     });
-
-            // }
-
-            var title = thisIssue["title"];
-            // // description = "a\r\n\r\nb \r\n c \r\n\r d";
-            // var description = "Priority: " + thisIssue["priority"] + "\r\n\r\n"
-            // + "Browser: " + thisIssue["browser"] + "\r\n\r\n"
-            // + "Url: " + thisIssue["url"] + "\r\n\r\n"
-            // + "Expected Result: " + thisIssue["expected_result"] + "\r\n\r\n"
-            // + "Actual Result: " + thisIssue["actual_result"] + "\r\n\r\n"
-            // + "Steps to Reproduce: " + thisIssue["steps"] + "\r\n\r\n"
-            // + "Description: " + thisIssue["description"] + "\r\n\r\n"
-            // ;
-
-            // for(var k = 0; k < imageLinks.length; k++){
-            //     description += imageLinks[k] + "\r\n\r\n";
-            // }
-
-
-
-            if("gitlab" in thisIssue && thisIssue.modified){
-                //update issue
-
-                $.ajax({
-                    type: "PUT",
-                    async: false,
-                    url: "https://gitlab.com/api/v4/projects/"+projectId+"/issues/" + thisIssue.gitlab.iid,
-                    // The key needs to match your method's input parameter (case-sensitive).
-                    headers: {"PRIVATE-TOKEN": "jirUTEUKh9zj-U5HTwg7"},
-                    data: {title: title, description: description},
-                    // contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    
-                    success: function(data){
-                        //add gitlab info
-                        thisIssue.gitlab = data;
-                        thisIssue.modified = false;
-                        // console.log(thisItem);
-                        issues[thisIssue.id] = thisIssue;
-
-                        chrome.storage.local.set({'issues': issues}); 
-                        
-                    },
-                    failure: function(errMsg) {
-                        alert(errMsg);
-                    }
-                });
-            } else if(!("gitlab" in thisIssue)) {
-                //create issue
-                // var thisIssue = item[id];
-                
-
-                $.ajax({
-                    type: "POST",
-                    async: false,
-                    url: "https://gitlab.com/api/v4/projects/"+projectId+"/issues",
-                    // The key needs to match your method's input parameter (case-sensitive).
-                    headers: {"PRIVATE-TOKEN": "jirUTEUKh9zj-U5HTwg7"},
-                    data: {title: title, description: thisIssue["content"]},
-                    // contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    
-                    success: function(data){
-                        //add gitlab info
-                        thisIssue.gitlab = data;
-                        issues[thisIssue.id] = thisIssue;
-                        chrome.storage.local.set({'issues': issues}); 
-                    },
-                    failure: function(errMsg) {
-                        alert(errMsg);
-                    }
-                });
-            }
+            
 
             
         }
@@ -209,7 +181,7 @@ function base64ToBlob(base64, mime)
     return new Blob(byteArrays, {type: mime});
 }
 
-var ID = function () {
+function ID() {
     var date = new Date();
     return '_' + date.getTime();
 };
