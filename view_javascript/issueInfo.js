@@ -12,6 +12,8 @@ var desktop_sharing = false;
 var local_stream = null;
 var status = "home"; //home, screen shot, edit image, edit issue
 var editingImages = [];
+var converter = new showdown.Converter();
+
 $('.ui.radio.checkbox')
   .checkbox()
 ;
@@ -73,7 +75,8 @@ function loadInfo(callback = null){
     chrome.storage.local.get(id, function (item) {
         obj[id] = item[id];
         document.getElementById('title').innerHTML = obj[id].title;
-        document.getElementById('content').innerHTML = obj[id].content;
+        document.getElementById('content').innerHTML = converter.makeHtml(obj[id].content);
+        console.log(obj[id].content);
         if(callback != null){
             callback();
         }
