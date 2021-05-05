@@ -71,8 +71,14 @@
         </style>
         <link rel="stylesheet" href="/css/semantic.min.css" >
     </head>
-    <body>
-        <div id="issueImageContainer">
+    <body >
+        <div style="position:absolute; top:0; bottom:0; width: 100%; ">
+            <div id="loader" class="ui inverted dimmer">
+                <div class="ui large text loader">Loading</div>
+            </div>
+        </div>
+       
+        <div id="issueImageContainer" >
             <div id="toolbar2">
                 <h2 id="title" style="position:absolute; left: 100; bottom: 1px;">Prove</h2>
                 <div id="thickness-container-draw" style="display:none;">
@@ -120,7 +126,8 @@
                 <canvas id="canvas" width="200%" height="200%" style="border: 1px solid black; position: absolute; z-index:2; top: 0; left: 0;"></canvas>
 
             </div>
-            
+
+
             
         </div>
         <script src="/javascript/jquery-3.5.1.js"></script>

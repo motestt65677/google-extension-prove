@@ -20,7 +20,7 @@ window.addEventListener("load", function(){
 
 
 document.querySelector('#doneEditImage').addEventListener('click', function(e) {
-
+    $("#loader").addClass("active");
     var canvas = document.getElementById('canvas');
     var canvasURL = canvas.toDataURL();
     var canvasImage = document.getElementById('canvasImage');
