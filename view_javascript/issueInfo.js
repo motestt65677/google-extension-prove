@@ -157,10 +157,7 @@ function onAccessApproved(desktop_id) {
                 local_stream.getVideoTracks()[0].stop();
                 desktop_sharing = false;
             }
-
-            var childWindow = popupCenter({url: "/view/issueEditImage.html", title: "aaa", w: window.innerWidth, h: window.innerHeight,});    
-            childWindow.dataURI = dataURI;  
-
+            chrome.windows.create({url: "/view/issueEditImage.html?" + "dataURI=" + encodeURIComponent(dataURI), type: "popup", setSelfAsOpener: true});   
         };
 
         stream.onended = function() {

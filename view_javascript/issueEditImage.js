@@ -6,7 +6,10 @@ window.addEventListener("load", function(){
     var img = document.querySelector('#editingImage');
     img.width = window.innerWidth * .90;
     img.setAttribute("object-fit", "cover");
-    img.src = window.dataURI;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const dataURI = urlParams.get('dataURI');
+    img.src = dataURI;
 
     //load convas after image is loaded
     if (img.complete) {
