@@ -2,6 +2,7 @@
 var context;
 var drawMode = "off";
 var mouseDown = false;
+var projectInfo;
 window.addEventListener("load", function(){
     var img = document.querySelector('#editingImage');
     img.width = window.innerWidth * .90;
@@ -18,6 +19,10 @@ window.addEventListener("load", function(){
         img.addEventListener('load', setUpDraw);
     }
 
+    chrome.storage.local.get('projectInfo', function (items) {
+        var info = items["projectInfo"];
+        projectInfo = info;
+    });
 });
 
 
@@ -171,13 +176,15 @@ function startCrop(){
 
         var form = new FormData();
         form.append("image", data);
-    
+        // console.log(projectInfo["imgurClientId"]);
+        // console.log(projectInfo.imgurClientId);
+
         var settings = {
             "url": "https://api.imgur.com/3/image",
             "method": "POST",
             "timeout": 0,
             "headers": {
-                "Authorization": "Client-ID {{clientId}}"
+                "Authorization": "Client-ID d9551e950665448" //+ projectInfo["imgurClientId"]
             },
             "processData": false,
             "mimeType": "multipart/form-data",

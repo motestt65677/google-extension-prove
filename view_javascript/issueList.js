@@ -1,3 +1,5 @@
+
+
 var projectInfo;
 // changing menu tabs
 $('.ui.secondary.menu').on('click', '.item', function() {
@@ -10,6 +12,7 @@ $('.ui.secondary.menu').on('click', '.item', function() {
 });
 
 window.addEventListener("load", function(){
+
     loadIssues('open');
     $('.ui.dropdown').dropdown();
     chrome.storage.local.get('projectInfo', function (items) {
@@ -17,7 +20,11 @@ window.addEventListener("load", function(){
         projectInfo = info;
         $("#projectId").val(projectInfo.projectId);
         $("#personalAccessToken").val(projectInfo.privateToken);
+        // $("#imgurClientId").val(projectInfo.imgurClientId);
     });
+
+    if(projectInfo == undefined)
+        $("#saveProjectInfo").trigger('click');
 });
 
 $('[data-tab]').click(function(){
@@ -32,17 +39,23 @@ $('[data-tab]').click(function(){
 $("#projectInfoBtn").click(function(){
     $("#projectInfoModal").modal('show');
 });
+$("#caqBtn").click(function(){
+    $("#caqModal").modal('show');
+});
+
 
 $("#saveProjectInfo").click(function(){
     var projectId = $("#projectId").val();
     var privateToken = $("#personalAccessToken").val();
+    // var imgurClientId = $("#imgurClientId").val();
+
     projectInfo = {
         projectId: projectId,
         privateToken: privateToken
+        // imgurClientId: imgurClientId
     };
     chrome.storage.local.set({'projectInfo': projectInfo}, function(){
         $("#projectInfoModal").modal('hide');
-        
     }); 
     // chrome.storage.local.get('projectInfo', function (projectInfo) {
     //     console.log(projectInfo);
@@ -50,6 +63,10 @@ $("#saveProjectInfo").click(function(){
 });
 
 $('#gitlab').click(function(){
+    if(projectInfo["projectId"] == "" || projectInfo["privateToken"] == ""){
+        alert("Please enter Project ID and Private Token");
+        return;
+    }
     $('#gitlab').prop('disabled', true);
     $('#gitlab').addClass("loading");
     // var id = "_1598507751746";
@@ -82,17 +99,15 @@ $('#gitlab').click(function(){
         
                     if("gitlab" in thisIssue && thisIssue.modified){
                         //update issue
-        
                         $.ajax({
                             type: "PUT",
                             async: false,
                             url: "https://gitlab.com/api/v4/projects/"+projectId+"/issues/" + thisIssue.gitlab.iid,
                             // The key needs to match your method's input parameter (case-sensitive).
-                            headers: {"PRIVATE-TOKEN": "jirUTEUKh9zj-U5HTwg7"},
+                            headers: {"PRIVATE-TOKEN": privateToken},
                             data: {title: title, description: description},
                             // contentType: "application/json; charset=utf-8",
                             dataType: "json",
-                            
                             success: function(data){
                                 //add gitlab info
                                 thisIssue.gitlab = data;
@@ -111,18 +126,15 @@ $('#gitlab').click(function(){
                     } else if(!("gitlab" in thisIssue)) {
                         //create issue
                         // var thisIssue = item[id];
-                        
-        
                         $.ajax({
                             type: "POST",
                             async: false,
                             url: "https://gitlab.com/api/v4/projects/"+projectId+"/issues",
                             // The key needs to match your method's input parameter (case-sensitive).
-                            headers: {"PRIVATE-TOKEN": "jirUTEUKh9zj-U5HTwg7"},
+                            headers: {"PRIVATE-TOKEN": privateToken},
                             data: {title: title, description: thisIssue["content"]},
                             // contentType: "application/json; charset=utf-8",
                             dataType: "json",
-                            
                             success: function(data){
                                 //add gitlab info
                                 thisIssue.gitlab = data;

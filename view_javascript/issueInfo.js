@@ -87,7 +87,7 @@ function loadEdit(){
     if (typeof(window.mainEditor) == "undefined"){
         ClassicEditor
         .create( document.querySelector( '#editor' ), {
-            language: 'zh'
+            language: 'en'
         } )
         .then( editor => {
             window.mainEditor = editor;
