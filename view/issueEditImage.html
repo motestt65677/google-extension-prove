@@ -66,6 +66,10 @@
             .width-100{
                 width: 100%;
             }
+            .board{
+                
+                position: absolute;  
+            }
             
             
         </style>
@@ -95,6 +99,13 @@
                         <input type="range" min="1" max="50" step="1" value="5" class="thickness" id="thickness-erase">
                     </div>
                 </div>
+                <div id="thickness-container-rectangle" style="display:none;">
+                    <div style="width: 25%; height: 100%; position: absolute; left: 200px; bottom: 1px;">
+                        &nbsp
+                        <img src="/images/stroke-width.svg" alt="" class="thickness-image">
+                        <input type="range" min="1" max="50" step="1" value="5" class="thickness" id="thickness-rectangle">
+                    </div>
+                </div>
                 <button id="doneEditImage" class="ui animated huge button blue" tabindex="0" style="position:absolute; right:5%;">
                     <div class="visible content">
                         <i class="save icon"></i>
@@ -105,30 +116,28 @@
                 </button>
             </div>
             <div id="toolbar">
-
-
-
+                <button id="prev" class="ui icon circular huge button" style="margin-bottom: 50px;">
+                    <i class="undo alternate icon"></i>
+                </button>
                 <button id="penBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
                     <i class="pencil alternate icon"></i>
                 </button>
-                <button id="eraserBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
-                    <i class="eraser alternate icon"></i>
+                <button id="rectangleBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
+                    <i class="square outline icon"></i>
                 </button>
+                <!-- <button id="eraserBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
+                    <i class="eraser alternate icon"></i>
+                </button> -->
+
                 <span id="color-container" class="ui icon circular huge button">
                     <input id="color1" type="color" value="#e66465" class="icon" >
                 </span>
 
             </div>
             <div id="canvasCrop" style="display:inline-block; position:relative; margin: 100px 0px 0px 100px;">
-                <img id="canvasImage" style="z-index:1; position: absolute; z-index:2; top: 0; left: 0;" >
                 <img id="editingImage" style="z-index:1; position: absolute; z-index:2; top: 0; left: 0;" >
-
-                <canvas id="canvas" width="200%" height="200%" style="border: 1px solid black; position: absolute; z-index:2; top: 0; left: 0;"></canvas>
-
+                <canvas id="canvas0" width="200%" height="200%" class="board" style="z-index:3; top:0; left: 0;"></canvas>
             </div>
-
-
-            
         </div>
         <script src="/javascript/jquery-3.5.1.js"></script>
         <script src="/view_javascript/issueEditImage.js"></script>

@@ -1,10 +1,18 @@
 
-var context;
+var contextNow;
 var drawMode = "off";
 var mouseDown = false;
 var projectInfo;
+var canvasNum = 0;
+var canvasArray = [];
+var img = document.querySelector('#editingImage');
+var canvasCrop = document.getElementById('canvasCrop');
+var clickX = new Array();
+var clickY = new Array();
+var clickDrag = new Array();
+var paint;
+
 window.addEventListener("load", function(){
-    var img = document.querySelector('#editingImage');
     img.width = window.innerWidth * .90;
     img.setAttribute("object-fit", "cover");
 
@@ -25,21 +33,18 @@ window.addEventListener("load", function(){
     });
 });
 
-
-
 document.querySelector('#doneEditImage').addEventListener('click', function(e) {
     $("#loader").addClass("active");
-    var canvas = document.getElementById('canvas');
-    var canvasURL = canvas.toDataURL();
-    var canvasImage = document.getElementById('canvasImage');
-    canvasImage.src = canvasURL;
-    if (canvasImage.complete) {
-        startCrop();
-    } else {
-        canvasImage.addEventListener('load', startCrop);
-    }
+    startCrop();
 });
+$("#prev").click(function(){
+    if(canvasArray.length <= 1)
+        return;
 
+    const index = canvasArray.length - 2;
+    canvasArray[index].remove();
+    canvasArray.splice(index, 1);
+})
 
 $('#penBtn').click(function(e) {
     e.preventDefault();
@@ -47,9 +52,17 @@ $('#penBtn').click(function(e) {
     $("#title").html("Draw");
     $(this).addClass('active');
     drawMode = "pen";
-    context.globalCompositeOperation="source-over";
+    contextNow.globalCompositeOperation="source-over";
     $("#thickness-container-draw").show();
 });
+$("#rectangleBtn").click(function(){
+    resetToolBars();
+    $("#title").html("Rectangle");
+    $(this).addClass('active');
+    drawMode = "rectangle";
+    contextNow.globalCompositeOperation="source-over";
+    $("#thickness-container-rectangle").show();
+})
 
 $('#eraserBtn').click(function(e) {
     e.preventDefault();
@@ -57,7 +70,7 @@ $('#eraserBtn').click(function(e) {
     $("#title").html("Erase");
     $(this).addClass('active');
     drawMode = "eraser";
-    context.globalCompositeOperation="destination-out";
+    contextNow.globalCompositeOperation="destination-out";
     $("#thickness-container-erase").show();
 });
 
@@ -65,49 +78,159 @@ $("#color-container").click(function(){
     document.querySelector('#color1').click();
 })
 
-var canvasCrop = document.getElementById('canvasCrop');
-
-$('#canvas').mousedown(function(e){
-    mouseDown = true;
-    var mouseX = e.pageX - this.offsetLeft - canvasCrop.offsetLeft;
-    var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
-    if(drawMode == "pen"){
-        paint = true;
-        addClick(mouseX, mouseY);
-        redraw(document.querySelector('#thickness-draw').value);
-    } 
-});
-
-$('#canvas').mousemove(function(e){
-    var mouseX = e.pageX - this.offsetLeft - canvasCrop.offsetLeft;
-    var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
-    if(drawMode == "pen" && paint){
-        addClick(mouseX, mouseY, true);
-        redraw(document.querySelector('#thickness-draw').value);
-    } else if(drawMode == "eraser" && mouseDown){
-        addClick(mouseX, mouseY, true);
-        redraw(document.querySelector('#thickness-erase').value);
-    }
-});
-
-$('#canvas').mouseup(function(e){
-    mouseDown = false;
-    paint = false;
-    clickX = [];
-    clickY = [];
-    clickDrag = [];
-});
-
-$('#canvas').mouseleave(function(e){
+$('canvas').mouseleave(function(e){
     paint = false;
 });
 
-var clickX = new Array();
-var clickY = new Array();
-var clickDrag = new Array();
-var paint;
 
 
+function bindCanvasEvent(elementId){
+    // calculate where the canvas is on the window
+    // (used to help calculate mouseX/mouseY)
+    // const thisCanvas = $(canvasArray[canvasArray.length - 1]);
+    // const canvasOffset = thisCanvas.offset();
+    // const offsetX = canvasOffset.left;
+    // const offsetY = canvasOffset.top;
+
+    // this flage is true when the user is dragging the mouse
+    var isDown = false;
+
+    // these vars will hold the starting mouse position
+    var startX;
+    var startY;
+
+    $("#" + elementId).mousedown(function(e){
+        
+        mouseDown = true;
+        var mouseX = e.pageX - this.offsetLeft - canvasCrop.offsetLeft;
+        var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
+        if(drawMode == "pen"){
+            paint = true;
+            addClick(mouseX, mouseY);
+            redraw(document.querySelector('#thickness-draw').value);
+        } else if (drawMode == "rectangle"){
+            e.preventDefault();
+            e.stopPropagation();
+
+            const thisCanvas = canvasArray[canvasArray.length - 1];
+            const canvasOffset = $(thisCanvas).offset();
+            const offsetX = canvasOffset.left;
+            const offsetY = canvasOffset.top;
+
+            contextNow.strokeStyle = document.querySelector("#color1").value;
+            contextNow.lineWidth = document.querySelector('#thickness-rectangle').value;
+            
+            // save the starting x/y of the rectangle
+            startX = parseInt(e.clientX - offsetX);
+            startY = parseInt(e.clientY - offsetY);
+        
+            // set a flag indicating the drag has begun
+            isDown = true;
+        }
+    });
+    
+    $("#" + elementId).mousemove(function(e){
+        var mouseX = e.pageX - this.offsetLeft - canvasCrop.offsetLeft;
+        var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
+        if(drawMode == "pen" && paint){
+            addClick(mouseX, mouseY, true);
+            redraw(document.querySelector('#thickness-draw').value);
+        } else if(drawMode == "eraser" && mouseDown){
+            addClick(mouseX, mouseY, true);
+            redraw(document.querySelector('#thickness-erase').value);
+        } else if (drawMode == "rectangle"){
+            e.preventDefault();
+            e.stopPropagation();
+            const thisCanvas = canvasArray[canvasArray.length - 1];
+            const canvasOffset = $(thisCanvas).offset();
+            const offsetX = canvasOffset.left;
+            const offsetY = canvasOffset.top;
+
+        
+            // if we're not dragging, just return
+            if (!isDown) {
+                return;
+            }
+        
+            // get the current mouse position
+            mouseX = parseInt(e.clientX - offsetX);
+            mouseY = parseInt(e.clientY - offsetY);
+
+            // Put your mousemove stuff here
+        
+            // clear the canvas
+            contextNow.clearRect(0, 0, thisCanvas.width, thisCanvas.height);
+            // console.log(thisCanvas.width);
+            // console.log(thisCanvas.height);
+
+            // calculate the rectangle width/height based
+            // on starting vs current mouse position
+            var width = mouseX - startX;
+            var height = mouseY - startY;
+        
+            // draw a new rect from the start position 
+            // to the current mouse position
+            contextNow.strokeRect(startX, startY, width, height);
+        }
+    });
+    
+    $("#" + elementId).mouseup(function(e){
+        mouseDown = false;
+        
+        if(drawMode == "pen"){
+            paint = false;
+            // crop canvas
+            const stroke_width = parseInt(document.querySelector('#thickness-draw').value)
+            const max_x = Math.max.apply(Math, clickX) + stroke_width;
+            const min_x = Math.min.apply(Math, clickX) - stroke_width;
+            const max_y = Math.max.apply(Math, clickY) + stroke_width;
+            const min_y = Math.min.apply(Math, clickY) - stroke_width;
+
+            const square_width = max_x - min_x;
+            const square_height = max_y - min_y;
+            const thisCanvas = canvasArray[canvasArray.length - 1];
+            const thisCtx = thisCanvas.getContext("2d");
+            trimmed = thisCtx.getImageData(min_x, min_y, square_width, square_height);
+            thisCanvas.width = square_width;
+            thisCanvas.height = square_height;
+            thisCanvas.style.top = min_y;
+            thisCanvas.style.left = min_x;
+            thisCanvas.style.border = "0px";
+
+            // thisCtx.clearRect(0, 0, thisCanvas.width, thisCanvas.height);
+            thisCtx.putImageData(trimmed, 0, 0);
+        } else if (drawMode == "rectangle"){
+            // the drag is over, clear the dragging flag
+            isDown = false;
+        }
+
+        // create new canvas for next round drawing
+        canvasNum++;
+        var newCanvas = document.createElement('canvas');
+        newCanvas.id = "canvas" + canvasNum;
+        newCanvas.className = "board";
+
+        newCanvas.style.zIndex = canvasNum + 3;
+        newCanvas.style.top = 0;
+        newCanvas.style.left = 0;
+        newCanvas.width = img.width-1;
+        newCanvas.height = img.height-1;
+        
+        canvasArray.push(newCanvas);
+        canvasCrop.appendChild(newCanvas);
+
+        bindCanvasEvent("canvas" + canvasNum);
+        contextNow = newCanvas.getContext("2d");
+        clickX = [];
+        clickY = [];
+        clickDrag = [];
+    });
+    
+    $("#" + elementId).mouseleave(function(e){
+        paint = false;
+    });
+
+}
 function resetToolBars(){
     $(".ui.icon.circular.huge.button").removeClass('active');
     $("#thickness-container").hide();
@@ -130,23 +253,22 @@ function redraw(thickness){
 
     // context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
     
-    context.strokeStyle = color;
-    context.lineJoin = "round";
-    context.lineWidth = thickness;
+    contextNow.strokeStyle = color;
+    contextNow.lineJoin = "round";
+    contextNow.lineWidth = thickness;
               
     for(var i=0; i < clickX.length; i++) {		
-      context.beginPath();
+      contextNow.beginPath();
       if(clickDrag[i] && i){
-        context.moveTo(clickX[i-1], clickY[i-1]);
-       }else{
-         context.moveTo(clickX[i]-1, clickY[i]);
-       }
-       context.lineTo(clickX[i], clickY[i]);
-       context.closePath();
-       context.stroke();
+        contextNow.moveTo(clickX[i-1], clickY[i-1]);
+      }else{
+        contextNow.moveTo(clickX[i]-1, clickY[i]);
+      }
+      contextNow.lineTo(clickX[i], clickY[i]);
+      contextNow.closePath();
+      contextNow.stroke();
     }
 }
-
 
 function getPreviewImageItem(url){
 
@@ -219,18 +341,15 @@ function ID() {
 };
 
 function setUpDraw(){
-
-
-
-    var img = document.querySelector('#editingImage');
-    var canvas = document.querySelector("#canvas");
+    var canvas = document.querySelector("#canvas" + canvasNum);
     canvas.width = img.width-1;
     canvas.height = img.height-1;
-
+    canvasArray.push(canvas);
     var canvasCrop = document.querySelector('#canvasCrop');
     canvasCrop.style.width = img.width-1;
     canvasCrop.style.height = img.height-1;
+    bindCanvasEvent("canvas" + canvasNum);
 
-    context = document.getElementById('canvas').getContext("2d");
+    contextNow = document.getElementById('canvas' + canvasNum).getContext("2d");
     $('#penBtn').click();
 }
