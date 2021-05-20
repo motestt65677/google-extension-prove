@@ -1,5 +1,6 @@
 <html>
 <head>
+  <meta charset="utf-8">
   <style>
     .footer {
       position: fixed;
@@ -29,6 +30,9 @@
       margin-right: 1em;
 
     }
+    p img{
+      max-width: 100%;
+    }
     
   </style>
   <link rel="stylesheet" href="/css/semantic.min.css" >
@@ -50,6 +54,8 @@
           </div>
         </div>
       </div>
+
+      <button id="caqBtn">Common asked questions</button>
     </div>
 
 
@@ -101,10 +107,46 @@
           <label>Personal Access Token</label>
           <input id="personalAccessToken"type="text">
         </div>
+        <!-- <div class="field">
+          <label>Imgur Client ID</label>
+          <input id="imgurClientId"type="text">
+        </div> -->
         <div class="ui button" id="saveProjectInfo">Save</div>
       </div>
     </div>
   </div>
+  <div id="caqModal" class="ui modal small">
+
+    <div class="header">Common ask questions</div>
+    <div class="content">
+      <div id="infoContainer" class="ui form">
+        <div style="height: 100vh;">
+          <h2>Common ask questions</h2>
+          <ol>
+            <li><a href="#q1">Where can I find Project ID and Personal Access Token on gitlab?</a></li>
+          </ol>
+        </div>
+        <!-- How to find project id and personal access token -->
+        <h2 id="q1">Where can I find Project ID and Personal Access Token on gitlab?</h2>
+        <div id="content" class="ck-content">
+          <p><strong>To find Project ID</strong></p>
+          <p>Log in your git lab account and select the project you want to upload your issues to. &nbsp;Click on Project overview → &nbsp;Details &nbsp;</p>
+          <p><img src="https://i.imgur.com/o1WNxCB.png" alt=""></p>
+          <p><strong>To Create Personal Access Token</strong> </p>
+          <p>You can create as many personal access tokens as you like.</p>
+          <ol>
+            <li>In the top-right corner, select your avatar.</li>
+            <li>Select <strong>Edit profile</strong>.</li>
+            <li>In the left sidebar, select <strong>Access Tokens</strong>.</li>
+            <li>Enter a name and optional expiry date for the token.</li>
+            <li>Select the <a href="https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#personal-access-token-scopes">desired scopes</a>.</li>
+            <li>Select <strong>Create personal access token</strong>.</li>
+          </ol>
+          <p>Save the personal access token somewhere safe. After you leave the page, you no longer have access to the token.</p></div>
+        </div>
+    </div>
+  </div>
+
 <script src="/javascript/html2canvas.min.js"></script>
 <script src="/javascript/jquery-3.5.1.js"></script>
 <!-- <script src="popper.min.js"></script> -->

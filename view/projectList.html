@@ -1,0 +1,122 @@
+<html>
+<head>
+  <style>
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background-color: black;
+      color: white;
+      text-align: center;
+    }
+    .gitlabSpan{
+      float: right;
+    }
+    .mr-1{
+      margin-right: 1em !important;
+    }
+    .change-height-of-dropdown {
+      border: 0 !important;
+    }
+    .sectionOne{
+      display: inline-block;
+      /* border-right: 1px solid gray; */
+
+    }
+    .sectionTwo{
+      display: inline-block;
+      margin-right: 1em;
+
+    }
+    
+  </style>
+  <link rel="stylesheet" href="/css/semantic.min.css" >
+</head>
+<body>
+  <div class="ui container">
+    <div style="margin-bottom: 25px;">&nbsp</div>
+    <div style="margin-bottom: 25px;">
+      &nbsp
+      <a href="/view/issueNew.html" class="ui teal right floated basic button medium">New Issue</a>
+      <!-- <button id="gitlab" class="ui blue right floated basic button">Sync All To Gitlab</button> -->
+      <div id="dropdown-btn" class="ui blue basic buttons right floated medium change-height-of-dropdown">
+        <div id="gitlab" class="ui blue right floated basic button medium">Sync All To Gitlab</div>
+
+        <div class="ui floating dropdown icon button">
+          <i class="key dropdown icon"></i>
+          <div class="menu">
+            <div id="projectInfoBtn" class="item"><i class="key icon"></i> Enter Project Info</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="ui secondary pointing menu">
+      <a class="active item" data-tab="open">
+        Open
+      </a>
+      <a class="item" data-tab="closed">
+        Closed
+      </a>
+      <a class="item" data-tab="all">
+        All
+      </a>
+    </div>
+    <div class="ui segment">
+      <div id="issues" class="ui middle aligned selection animated divided list">
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+    <div>
+      Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>, <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a> &nbsp
+    </div>
+  </footer>
+
+<!-- 
+  <div id="projectInfoModal" class="ui tiny modal">
+    <div class="header">Header</div>
+    <div class="content">
+      <p></p>
+    </div>
+    <div class="actions">
+      <div class="ui approve button">Approve</div>
+      <div class="ui button">Neutral</div>
+      <div class="ui cancel button">Cancel</div>
+    </div>
+  </div> -->
+  <div id="projectInfoModal" class="ui modal small">
+    <div class="header">Project Info</div>
+    <div class="content">
+      <div class="ui form">
+        <div class="field">
+          <label>Project ID</label>
+          <input id="projectId" type="text">
+        </div>
+        <div class="field">
+          <label>Personal Access Token</label>
+          <input id="personalAccessToken"type="text">
+        </div>
+        <div class="field">
+          <label>Imgur Client ID</label>
+          <input id="imgurClientId"type="text">
+        </div>
+        <div class="ui button" id="saveProjectInfo">Save</div>
+      </div>
+    </div>
+  </div>
+<script src="/javascript/html2canvas.min.js"></script>
+<script src="/javascript/jquery-3.5.1.js"></script>
+<!-- <script src="popper.min.js"></script> -->
+<!-- <script src="bootstrap.min.js"></script> -->
+<script src="/javascript/semantic.min.js"></script>
+<!-- <script src="/javascript/dropdown.js"></script> -->
+
+<script src="/view_javascript/issueList.js"></script>
+
+</body>
+</html>

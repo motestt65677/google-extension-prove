@@ -2,11 +2,15 @@
 var context;
 var drawMode = "off";
 var mouseDown = false;
+var projectInfo;
 window.addEventListener("load", function(){
     var img = document.querySelector('#editingImage');
     img.width = window.innerWidth * .90;
     img.setAttribute("object-fit", "cover");
-    img.src = window.dataURI;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const dataURI = urlParams.get('dataURI');
+    img.src = dataURI;
 
     //load convas after image is loaded
     if (img.complete) {
@@ -15,12 +19,16 @@ window.addEventListener("load", function(){
         img.addEventListener('load', setUpDraw);
     }
 
+    chrome.storage.local.get('projectInfo', function (items) {
+        var info = items["projectInfo"];
+        projectInfo = info;
+    });
 });
 
 
 
 document.querySelector('#doneEditImage').addEventListener('click', function(e) {
-
+    $("#loader").addClass("active");
     var canvas = document.getElementById('canvas');
     var canvasURL = canvas.toDataURL();
     var canvasImage = document.getElementById('canvasImage');
@@ -162,14 +170,53 @@ function startCrop(){
         
         var item = document.createElement('div');
         item.classList.add("item");
-        var url = canvas.toDataURL("image/png");
-        var item = getPreviewImageItem(url);
-        var imageList = window.opener.document.querySelector('#imageList');
-        imageList.appendChild(item);
-        window.opener.editingImages.push(url);
-        window.close();
+        var imageUrl = canvas.toDataURL("image/png");
+        // var item = getPreviewImageItem(url);
+        var data = imageUrl.split(',')[1];
+
+        var form = new FormData();
+        form.append("image", data);
+        // console.log(projectInfo["imgurClientId"]);
+        // console.log(projectInfo.imgurClientId);
+
+        var settings = {
+            "url": "https://api.imgur.com/3/image",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Client-ID d9551e950665448" //+ projectInfo["imgurClientId"]
+            },
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+            "data": form
+            // "async": false
+        };
+    
+        $.ajax(settings).done(function (response) {
+            console.log(typeof(response));
+            responseJson = JSON.parse(response);
+            if(responseJson["status"] != "200")
+                return false;
+
+            var editor = window.opener.mainEditor;
+            editor.model.change( writer => {
+                const imageElement = writer.createElement( 'image', {
+                    src: responseJson["data"]["link"]
+                } );
+
+                // Insert the image in the current selection location.
+                editor.model.insertContent( imageElement, editor.model.document.selection );
+            } );
+            window.close();
+        });
     });
 }
+
+function ID() {
+    var date = new Date();
+    return '_' + date.getTime();
+};
 
 function setUpDraw(){
 
