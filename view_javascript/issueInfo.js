@@ -2,7 +2,7 @@ var closeIssueBtn = document.getElementById('closeIssue');
 var reopenIssueBtn = document.getElementById('reopenIssue');
 var editIssueBtn = document.getElementById('editIssue');
 var saveIssueBtn = document.getElementById('saveIssue');
-
+var deleteIssueBtn = document.getElementById('deleteBtn');
 var urlParams = new URLSearchParams(window.location.search);
 var id = urlParams.get('id');
 var obj = {};
@@ -70,6 +70,14 @@ saveIssueBtn.addEventListener('click', function(){
         loadInfo();
     }); 
 });
+deleteIssueBtn.addEventListener('click', function(){
+    var result = confirm("Issue will be removed! Are you sure?");
+    if (result) {
+        chrome.storage.local.remove(id);
+        window.location.href = "/view/issueList.html"
+    }
+});
+
 
 function loadInfo(callback = null){
     chrome.storage.local.get(id, function (item) {

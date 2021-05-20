@@ -44,7 +44,7 @@
       &nbsp
       <a href="/view/issueNew.html" class="ui teal right floated basic button medium">New Issue</a>
       <!-- <button id="gitlab" class="ui blue right floated basic button">Sync All To Gitlab</button> -->
-      <div id="dropdown-btn" class="ui blue basic buttons right floated medium change-height-of-dropdown">
+      <div id="dropdown-btn" class="ui blue basic buttons right floated medium change-height-of-dropdown" style="margin-right:0.3rem;">
         <div id="gitlab" class="ui blue right floated basic button medium">Sync All To Gitlab</div>
 
         <div class="ui floating dropdown icon button">
@@ -55,7 +55,7 @@
         </div>
       </div>
 
-      <button id="caqBtn">Common asked questions</button>
+      <button id="caqBtn" class="ui button left floated medium" style="margin-right:0.3rem;">Common asked questions</button>
     </div>
 
 
@@ -115,19 +115,21 @@
       </div>
     </div>
   </div>
-  <div id="caqModal" class="ui modal small">
+  <div id="caqModal" class="ui modal large">
 
-    <div class="header">Common ask questions</div>
+    <div class="header"><h3>Common ask questions</h3></div>
     <div class="content">
       <div id="infoContainer" class="ui form">
         <div style="height: 100vh;">
-          <h2>Common ask questions</h2>
-          <ol>
-            <li><a href="#q1">Where can I find Project ID and Personal Access Token on gitlab?</a></li>
-          </ol>
+          <h4>
+            <ol>
+              <li><a href="#q1">Where can I find Project ID and Personal Access Token on gitlab?</a></li>
+            </ol>
+          </h4>
         </div>
         <!-- How to find project id and personal access token -->
-        <h2 id="q1">Where can I find Project ID and Personal Access Token on gitlab?</h2>
+        <div class="ui divider" id="q1"></div>
+        <h3>Where can I find Project ID and Personal Access Token on gitlab?</h3>
         <div id="content" class="ck-content">
           <p><strong>To find Project ID</strong></p>
           <p>Log in your git lab account and select the project you want to upload your issues to. &nbsp;Click on Project overview → &nbsp;Details &nbsp;</p>
@@ -144,6 +146,7 @@
           </ol>
           <p>Save the personal access token somewhere safe. After you leave the page, you no longer have access to the token.</p></div>
         </div>
+        <div class="ui divider"></div>
     </div>
   </div>
 
