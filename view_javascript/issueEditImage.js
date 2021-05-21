@@ -11,8 +11,10 @@ var clickX = new Array();
 var clickY = new Array();
 var clickDrag = new Array();
 var paint;
+var postItNum = 0;
 
 window.addEventListener("load", function(){
+
     img.width = window.innerWidth * .90;
     img.setAttribute("object-fit", "cover");
 
@@ -63,6 +65,9 @@ $("#rectangleBtn").click(function(){
     contextNow.globalCompositeOperation="source-over";
     $("#thickness-container-rectangle").show();
 })
+$("#postItBtn").click(function(){
+    addPostIt();
+})
 
 $('#eraserBtn').click(function(e) {
     e.preventDefault();
@@ -105,6 +110,9 @@ function bindCanvasEvent(elementId){
         var mouseX = e.pageX - this.offsetLeft - canvasCrop.offsetLeft;
         var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
         if(drawMode == "pen"){
+            if (e.button==2){
+                return false;
+            }
             paint = true;
             addClick(mouseX, mouseY);
             redraw(document.querySelector('#thickness-draw').value);
@@ -354,4 +362,40 @@ function setUpDraw(){
 
     contextNow = document.getElementById('canvas' + canvasNum).getContext("2d");
     $('#penBtn').click();
+}
+
+function addPostIt(){
+
+    const container = document.createElement('div');
+    const topBar = document.createElement('div');
+    const topBarNum = document.createElement('span');
+    const textArea = document.createElement('div');
+    const postItId = "postIt" + postItNum;
+    container.className = "postItContainer";
+    container.id = postItId;
+    container.style.zIndex = postItNum + 1000;
+    topBar.className = "topBar";
+    topBarNum.className = "topBarNum";
+    topBarNum.innerHTML = postItNum + 1;
+    textArea.className = "textAria";
+    textArea.innerHTML = "Hello, edit me first then drag & drop me."
+    textArea.setAttribute("contenteditable", "");
+
+    topBar.appendChild(topBarNum);
+    container.appendChild(topBar);
+    container.appendChild(textArea);
+    canvasCrop.appendChild(container);
+    
+    $("#" + postItId).draggable({
+        handle:  '.topBar',
+    }); 
+    postItNum++;
+    // <div id="postIt" class="postItContainer" style="z-index:4;">
+    //     <div class=topBar>
+    //         <span class="topBarNum">1</span>
+    //     </div>
+    //     <div contenteditable class="textAria">
+    //         Hello, <b>Edit Me First</b> Then Drag & Drop me.
+    //     </div>
+    // </div>
 }

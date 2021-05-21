@@ -71,9 +71,49 @@
                 position: absolute;  
             }
             
-            
+
+            /*  post it note*/
+            .topBar{
+                z-index: 1;
+                position:absolute;
+                background-color:#f39c12;
+                height: 35px;
+                width: 35px;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+            .topBarNum{
+                position:relative;
+                top:8px;
+                left:13px;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+
+            }
+            .textAria{
+                position:absolute;
+                border-color:red;
+                background-color:#f1c40f;
+                width:200px;
+                /* height: 2rem; */
+                margin-top:20px;
+                margin-left: 20px;
+                overflow:hide;
+                padding: 10px 10px 10px 10px;
+            }
+            .textAria:focus{
+                outline: 0;
+            }
+
+            .postItContainer{
+                position: absolute; 
+                top: 0;
+            }
         </style>
         <link rel="stylesheet" href="/css/semantic.min.css" >
+        <link rel="stylesheet" href="/jquery-ui/jquery-ui.min.css" >
+
     </head>
     <body >
         <div style="position:absolute; top:0; bottom:0; width: 100%; ">
@@ -125,6 +165,9 @@
                 <button id="rectangleBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
                     <i class="square outline icon"></i>
                 </button>
+                <button id="postItBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
+                    <i class="sticky note outline icon"></i>
+                </button>
                 <!-- <button id="eraserBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
                     <i class="eraser alternate icon"></i>
                 </button> -->
@@ -137,11 +180,21 @@
             <div id="canvasCrop" style="display:inline-block; position:relative; margin: 100px 0px 0px 100px;">
                 <img id="editingImage" style="z-index:1; position: absolute; z-index:2; top: 0; left: 0;" >
                 <canvas id="canvas0" width="200%" height="200%" class="board" style="z-index:3; top:0; left: 0;"></canvas>
+                <!-- <div id="postIt" class="postItContainer" style="z-index:4;">
+                    <div class=topBar>
+                        <span class="topBarNum">1</span>
+                    </div>
+                    <div contenteditable class="textAria">
+                        Hello, <b>Edit Me First</b> Then Drag & Drop me.
+                    </div>
+                </div> -->
             </div>
         </div>
         <script src="/javascript/jquery-3.5.1.js"></script>
         <script src="/view_javascript/issueEditImage.js"></script>
         <script src="/javascript/html2canvas.min.js"></script>
         <script src="/javascript/semantic.min.js"></script>
+        <script src="/jquery-ui/jquery-ui.min.js"></script>
+
     </body>
 </html>
