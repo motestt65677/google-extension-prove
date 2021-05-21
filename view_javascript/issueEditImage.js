@@ -238,6 +238,8 @@ function resetToolBars(){
     $("#title").html("");
     $("#thickness-container-draw").hide();
     $("#thickness-container-erase").hide();
+    $("#thickness-container-rectangle").hide();
+
 
 }
 function addClick(x, y, dragging)
