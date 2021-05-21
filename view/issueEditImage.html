@@ -123,6 +123,7 @@
         </div>
        
         <div id="issueImageContainer" >
+
             <div id="toolbar2">
                 <h2 id="title" style="position:absolute; left: 100; bottom: 1px;">Prove</h2>
                 <div id="thickness-container-draw" style="display:none;">
@@ -146,6 +147,7 @@
                         <input type="range" min="1" max="30" step="1" value="5" class="thickness" id="thickness-rectangle">
                     </div>
                 </div>
+
                 <button id="doneEditImage" class="ui animated huge button blue" tabindex="0" style="position:absolute; right:5%;">
                     <div class="visible content">
                         <i class="save icon"></i>
@@ -154,6 +156,14 @@
                         Save
                     </div>
                 </button>
+            </div>
+            <div id="toolbarTop" style="z-index: 5; margin-top: 80px; margin-left: 200px;">
+                <button id="postItBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
+                    <i class="sticky note outline icon"></i>
+                </button>
+                <div id="trash" class="ui icon circular huge button disabled" style="margin-bottom: 20px;">
+                    <i class="trash alternate outline icon"></i>
+                </div>
             </div>
             <div id="toolbar">
                 <button id="prev" class="ui icon circular huge button" style="margin-bottom: 50px;">
@@ -165,9 +175,13 @@
                 <button id="rectangleBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
                     <i class="square outline icon"></i>
                 </button>
-                <button id="postItBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
+                <!-- <button id="postItBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
                     <i class="sticky note outline icon"></i>
                 </button>
+                <div id="trash" class="ui icon circular huge button" style="margin-bottom: 20px;">
+                    <i class="trash alternate outline icon"></i>
+                </div> -->
+
                 <!-- <button id="eraserBtn" class="ui icon circular huge button" style="margin-bottom: 20px;">
                     <i class="eraser alternate icon"></i>
                 </button> -->
@@ -177,7 +191,7 @@
                 </span>
 
             </div>
-            <div id="canvasCrop" style="display:inline-block; position:relative; margin: 100px 0px 0px 100px;">
+            <div id="canvasCrop" style="display:inline-block; position:relative; margin: 10px 0px 0px 100px;">
                 <img id="editingImage" style="z-index:1; position: absolute; z-index:2; top: 0; left: 0;" >
                 <canvas id="canvas0" width="200%" height="200%" class="board" style="z-index:3; top:0; left: 0;"></canvas>
                 <!-- <div id="postIt" class="postItContainer" style="z-index:4;">

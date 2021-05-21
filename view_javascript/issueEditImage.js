@@ -33,59 +33,74 @@ window.addEventListener("load", function(){
         var info = items["projectInfo"];
         projectInfo = info;
     });
+
+    $('#trash').droppable({
+        drop: function (event, ui) {
+            if(!ui.draggable.hasClass('dropped')) return false;
+            ui.draggable.remove();
+            postItResequence();
+        }
+    });
+
+    document.querySelector('#doneEditImage').addEventListener('click', function(e) {
+        $("#loader").addClass("active");
+        startCrop();
+    });
+
+    $("#prev").click(function(){
+        if(canvasArray.length <= 1)
+            return;
+    
+        const index = canvasArray.length - 2;
+        canvasArray[index].remove();
+        canvasArray.splice(index, 1);
+    })
+    
+    $('#penBtn').click(function(e) {
+        e.preventDefault();
+        resetToolBars();
+        $("#title").html("Draw");
+        $(this).addClass('active');
+        drawMode = "pen";
+        contextNow.globalCompositeOperation="source-over";
+        $("#thickness-container-draw").show();
+    });
+
+    $("#rectangleBtn").click(function(){
+        resetToolBars();
+        $("#title").html("Rectangle");
+        $(this).addClass('active');
+        drawMode = "rectangle";
+        contextNow.globalCompositeOperation="source-over";
+        $("#thickness-container-rectangle").show();
+    })
+
+    $("#postItBtn").click(function(){
+        addPostIt();
+    })
+    
+    $('#eraserBtn').click(function(e) {
+        e.preventDefault();
+        resetToolBars();
+        $("#title").html("Erase");
+        $(this).addClass('active');
+        drawMode = "eraser";
+        contextNow.globalCompositeOperation="destination-out";
+        $("#thickness-container-erase").show();
+    });
+    
+    $("#color-container").click(function(){
+        document.querySelector('#color1').click();
+    })
+    
+    $('canvas').mouseleave(function(e){
+        paint = false;
+    });
 });
 
-document.querySelector('#doneEditImage').addEventListener('click', function(e) {
-    $("#loader").addClass("active");
-    startCrop();
-});
-$("#prev").click(function(){
-    if(canvasArray.length <= 1)
-        return;
 
-    const index = canvasArray.length - 2;
-    canvasArray[index].remove();
-    canvasArray.splice(index, 1);
-})
 
-$('#penBtn').click(function(e) {
-    e.preventDefault();
-    resetToolBars();
-    $("#title").html("Draw");
-    $(this).addClass('active');
-    drawMode = "pen";
-    contextNow.globalCompositeOperation="source-over";
-    $("#thickness-container-draw").show();
-});
-$("#rectangleBtn").click(function(){
-    resetToolBars();
-    $("#title").html("Rectangle");
-    $(this).addClass('active');
-    drawMode = "rectangle";
-    contextNow.globalCompositeOperation="source-over";
-    $("#thickness-container-rectangle").show();
-})
-$("#postItBtn").click(function(){
-    addPostIt();
-})
 
-$('#eraserBtn').click(function(e) {
-    e.preventDefault();
-    resetToolBars();
-    $("#title").html("Erase");
-    $(this).addClass('active');
-    drawMode = "eraser";
-    contextNow.globalCompositeOperation="destination-out";
-    $("#thickness-container-erase").show();
-});
-
-$("#color-container").click(function(){
-    document.querySelector('#color1').click();
-})
-
-$('canvas').mouseleave(function(e){
-    paint = false;
-});
 
 
 
@@ -365,13 +380,12 @@ function setUpDraw(){
 }
 
 function addPostIt(){
-
     const container = document.createElement('div');
     const topBar = document.createElement('div');
     const topBarNum = document.createElement('span');
     const textArea = document.createElement('div');
     const postItId = "postIt" + postItNum;
-    container.className = "postItContainer";
+    container.className = "postItContainer dropped";
     container.id = postItId;
     container.style.zIndex = postItNum + 1000;
     topBar.className = "topBar";
@@ -390,12 +404,14 @@ function addPostIt(){
         handle:  '.topBar',
     }); 
     postItNum++;
-    // <div id="postIt" class="postItContainer" style="z-index:4;">
-    //     <div class=topBar>
-    //         <span class="topBarNum">1</span>
-    //     </div>
-    //     <div contenteditable class="textAria">
-    //         Hello, <b>Edit Me First</b> Then Drag & Drop me.
-    //     </div>
-    // </div>
+}
+
+function postItResequence(){
+    postItNum = 0;
+    const postIts = $(".postItContainer");
+    postIts.each(function(index){
+        const thisPostIts = $(postIts[index]);
+        thisPostIts.find('.topBarNum').html(postItNum + 1);
+        postItNum++;
+    });
 }
