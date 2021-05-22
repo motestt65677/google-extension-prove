@@ -10,7 +10,6 @@ var canvasCrop = document.getElementById('canvasCrop');
 var clickX = new Array();
 var clickY = new Array();
 var clickDrag = new Array();
-var paint;
 var postItNum = 0;
 
 window.addEventListener("load", function(){
@@ -93,9 +92,6 @@ window.addEventListener("load", function(){
         document.querySelector('#color1').click();
     })
     
-    $('canvas').mouseleave(function(e){
-        paint = false;
-    });
 });
 
 
@@ -105,20 +101,11 @@ window.addEventListener("load", function(){
 
 
 function bindCanvasEvent(elementId){
-    // calculate where the canvas is on the window
-    // (used to help calculate mouseX/mouseY)
-    // const thisCanvas = $(canvasArray[canvasArray.length - 1]);
-    // const canvasOffset = thisCanvas.offset();
-    // const offsetX = canvasOffset.left;
-    // const offsetY = canvasOffset.top;
-
-    // this flage is true when the user is dragging the mouse
-    var isDown = false;
-
     // these vars will hold the starting mouse position
-    var startX;
-    var startY;
-
+    let startX;
+    let startY;
+    let endX;
+    let endY;
     $("#" + elementId).mousedown(function(e){
         
         mouseDown = true;
@@ -128,7 +115,6 @@ function bindCanvasEvent(elementId){
             if (e.button==2){
                 return false;
             }
-            paint = true;
             addClick(mouseX, mouseY);
             redraw(document.querySelector('#thickness-draw').value);
         } else if (drawMode == "rectangle"){
@@ -146,16 +132,14 @@ function bindCanvasEvent(elementId){
             // save the starting x/y of the rectangle
             startX = parseInt(e.clientX - offsetX);
             startY = parseInt(e.clientY - offsetY);
-        
-            // set a flag indicating the drag has begun
-            isDown = true;
+            addClick(startX, startY);
         }
     });
     
     $("#" + elementId).mousemove(function(e){
         var mouseX = e.pageX - this.offsetLeft - canvasCrop.offsetLeft;
         var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
-        if(drawMode == "pen" && paint){
+        if(drawMode == "pen" && mouseDown){
             addClick(mouseX, mouseY, true);
             redraw(document.querySelector('#thickness-draw').value);
         } else if(drawMode == "eraser" && mouseDown){
@@ -171,7 +155,7 @@ function bindCanvasEvent(elementId){
 
         
             // if we're not dragging, just return
-            if (!isDown) {
+            if (!mouseDown) {
                 return;
             }
         
@@ -198,50 +182,51 @@ function bindCanvasEvent(elementId){
     });
     
     $("#" + elementId).mouseup(function(e){
+
         mouseDown = false;
-        
         if(drawMode == "pen"){
-            paint = false;
-            // crop canvas
-            const stroke_width = parseInt(document.querySelector('#thickness-draw').value)
-            const max_x = Math.max.apply(Math, clickX) + stroke_width;
-            const min_x = Math.min.apply(Math, clickX) - stroke_width;
-            const max_y = Math.max.apply(Math, clickY) + stroke_width;
-            const min_y = Math.min.apply(Math, clickY) - stroke_width;
-
-            const square_width = max_x - min_x;
-            const square_height = max_y - min_y;
-            const thisCanvas = canvasArray[canvasArray.length - 1];
-            const thisCtx = thisCanvas.getContext("2d");
-            trimmed = thisCtx.getImageData(min_x, min_y, square_width, square_height);
-            thisCanvas.width = square_width;
-            thisCanvas.height = square_height;
-            thisCanvas.style.top = min_y;
-            thisCanvas.style.left = min_x;
-            thisCanvas.style.border = "0px";
-
-            // thisCtx.clearRect(0, 0, thisCanvas.width, thisCanvas.height);
-            thisCtx.putImageData(trimmed, 0, 0);
+            max_x = Math.max.apply(Math, clickX) + stroke_width;
+            min_x = Math.min.apply(Math, clickX) - stroke_width;
+            max_y = Math.max.apply(Math, clickY) + stroke_width;
+            min_y = Math.min.apply(Math, clickY) - stroke_width;
         } else if (drawMode == "rectangle"){
-            // the drag is over, clear the dragging flag
-            isDown = false;
+            const thisCanvas = canvasArray[canvasArray.length - 1];
+            const canvasOffset = $(thisCanvas).offset();
+            const offsetX = canvasOffset.left;
+            const offsetY = canvasOffset.top;
+            addClick(parseInt(e.clientX - offsetX), parseInt(e.clientY - offsetY));
         }
+        //crop canvas
+        let max_x = Math.max.apply(Math, clickX) + stroke_width;
+        let min_x = Math.min.apply(Math, clickX) - stroke_width;
+        let max_y = Math.max.apply(Math, clickY) + stroke_width;
+        let min_y = Math.min.apply(Math, clickY) - stroke_width;
+        let stroke_width = parseInt(document.querySelector('#thickness-draw').value);
+        const square_width = max_x - min_x;
+        const square_height = max_y - min_y;
+        const thisCanvas = canvasArray[canvasArray.length - 1];
+        const thisCtx = thisCanvas.getContext("2d");
+        trimmed = thisCtx.getImageData(min_x, min_y, square_width, square_height);
+        thisCanvas.width = square_width;
+        thisCanvas.height = square_height;
+        thisCanvas.style.top = min_y;
+        thisCanvas.style.left = min_x;
+        thisCanvas.style.border = "0px";
+        thisCtx.putImageData(trimmed, 0, 0);
+
 
         // create new canvas for next round drawing
         canvasNum++;
         var newCanvas = document.createElement('canvas');
         newCanvas.id = "canvas" + canvasNum;
         newCanvas.className = "board";
-
         newCanvas.style.zIndex = canvasNum + 3;
         newCanvas.style.top = 0;
         newCanvas.style.left = 0;
         newCanvas.width = img.width-1;
         newCanvas.height = img.height-1;
-        
         canvasArray.push(newCanvas);
         canvasCrop.appendChild(newCanvas);
-
         bindCanvasEvent("canvas" + canvasNum);
         contextNow = newCanvas.getContext("2d");
         clickX = [];
@@ -250,7 +235,7 @@ function bindCanvasEvent(elementId){
     });
     
     $("#" + elementId).mouseleave(function(e){
-        paint = false;
+        mouseDown = false;
     });
 
 }
