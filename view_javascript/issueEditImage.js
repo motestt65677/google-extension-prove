@@ -185,18 +185,12 @@ function bindCanvasEvent(elementId){
 
         } else if (drawMode == "rectangle"){
             stroke_width = parseInt(document.querySelector('#thickness-rectangle').value);
-
             const thisCanvas = canvasArray[canvasArray.length - 1];
             const canvasOffset = $(thisCanvas).offset();
             const offsetX = canvasOffset.left;
             const offsetY = canvasOffset.top;
             addClick(parseInt(e.clientX - offsetX), parseInt(e.clientY - offsetY));
-
-
         }
-
-        console.log(clickX);
-        console.log(clickY);
 
         //crop canvas
         let max_x = Math.max.apply(Math, clickX) + stroke_width;
@@ -204,14 +198,6 @@ function bindCanvasEvent(elementId){
         let max_y = Math.max.apply(Math, clickY) + stroke_width;
         let min_y = Math.min.apply(Math, clickY) - stroke_width;
 
-        console.log(max_x);
-        console.log(min_x);
-        console.log(max_y);
-        console.log(min_y);
-
-
-
-        
         const square_width = max_x - min_x;
         const square_height = max_y - min_y;
         const thisCanvas = canvasArray[canvasArray.length - 1];
@@ -330,7 +316,6 @@ function startCrop(){
         };
     
         $.ajax(settings).done(function (response) {
-            console.log(typeof(response));
             responseJson = JSON.parse(response);
             if(responseJson["status"] != "200")
                 return false;
