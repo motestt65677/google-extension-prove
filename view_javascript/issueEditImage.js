@@ -104,13 +104,12 @@ function bindCanvasEvent(elementId){
     // these vars will hold the starting mouse position
     let startX;
     let startY;
-    let endX;
-    let endY;
+
     $("#" + elementId).mousedown(function(e){
-        
         mouseDown = true;
         var mouseX = e.pageX - this.offsetLeft - canvasCrop.offsetLeft;
         var mouseY = e.pageY - this.offsetTop - canvasCrop.offsetTop;
+
         if(drawMode == "pen"){
             if (e.button==2){
                 return false;
@@ -153,7 +152,6 @@ function bindCanvasEvent(elementId){
             const offsetX = canvasOffset.left;
             const offsetY = canvasOffset.top;
 
-        
             // if we're not dragging, just return
             if (!mouseDown) {
                 return;
@@ -163,20 +161,14 @@ function bindCanvasEvent(elementId){
             mouseX = parseInt(e.clientX - offsetX);
             mouseY = parseInt(e.clientY - offsetY);
 
-            // Put your mousemove stuff here
-        
             // clear the canvas
             contextNow.clearRect(0, 0, thisCanvas.width, thisCanvas.height);
-            // console.log(thisCanvas.width);
-            // console.log(thisCanvas.height);
 
-            // calculate the rectangle width/height based
-            // on starting vs current mouse position
+            // calculate the rectangle width/height based on starting vs current mouse position
             var width = mouseX - startX;
             var height = mouseY - startY;
         
-            // draw a new rect from the start position 
-            // to the current mouse position
+            // draw a new rect from the start position to the current mouse position 
             contextNow.strokeRect(startX, startY, width, height);
         }
     });
@@ -184,24 +176,42 @@ function bindCanvasEvent(elementId){
     $("#" + elementId).mouseup(function(e){
 
         mouseDown = false;
+
+        let stroke_width;
+
+
         if(drawMode == "pen"){
-            max_x = Math.max.apply(Math, clickX) + stroke_width;
-            min_x = Math.min.apply(Math, clickX) - stroke_width;
-            max_y = Math.max.apply(Math, clickY) + stroke_width;
-            min_y = Math.min.apply(Math, clickY) - stroke_width;
+            stroke_width = parseInt(document.querySelector('#thickness-draw').value);
+
         } else if (drawMode == "rectangle"){
+            stroke_width = parseInt(document.querySelector('#thickness-rectangle').value);
+
             const thisCanvas = canvasArray[canvasArray.length - 1];
             const canvasOffset = $(thisCanvas).offset();
             const offsetX = canvasOffset.left;
             const offsetY = canvasOffset.top;
             addClick(parseInt(e.clientX - offsetX), parseInt(e.clientY - offsetY));
+
+
         }
+
+        console.log(clickX);
+        console.log(clickY);
+
         //crop canvas
         let max_x = Math.max.apply(Math, clickX) + stroke_width;
         let min_x = Math.min.apply(Math, clickX) - stroke_width;
         let max_y = Math.max.apply(Math, clickY) + stroke_width;
         let min_y = Math.min.apply(Math, clickY) - stroke_width;
-        let stroke_width = parseInt(document.querySelector('#thickness-draw').value);
+
+        console.log(max_x);
+        console.log(min_x);
+        console.log(max_y);
+        console.log(min_y);
+
+
+
+        
         const square_width = max_x - min_x;
         const square_height = max_y - min_y;
         const thisCanvas = canvasArray[canvasArray.length - 1];
@@ -213,7 +223,6 @@ function bindCanvasEvent(elementId){
         thisCanvas.style.left = min_x;
         thisCanvas.style.border = "0px";
         thisCtx.putImageData(trimmed, 0, 0);
-
 
         // create new canvas for next round drawing
         canvasNum++;
@@ -261,8 +270,6 @@ function redraw(thickness){
     var color = document.querySelector("#color1").value;
     var thickness = thickness;
 
-    // context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-    
     contextNow.strokeStyle = color;
     contextNow.lineJoin = "round";
     contextNow.lineWidth = thickness;
@@ -303,13 +310,10 @@ function startCrop(){
         var item = document.createElement('div');
         item.classList.add("item");
         var imageUrl = canvas.toDataURL("image/png");
-        // var item = getPreviewImageItem(url);
         var data = imageUrl.split(',')[1];
 
         var form = new FormData();
         form.append("image", data);
-        // console.log(projectInfo["imgurClientId"]);
-        // console.log(projectInfo.imgurClientId);
 
         var settings = {
             "url": "https://api.imgur.com/3/image",
